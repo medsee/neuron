@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neuron UZB</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060a12;--surface:#0d1420;--surface2:#131c2e;--border:rgba(99,179,237,0.15);--accent:#63b3ed;--accent2:#68d391;--accent3:#f6ad55;--danger:#fc8181;--text:#e2e8f0;--muted:#718096;--glow:rgba(99,179,237,0.3)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 20%,rgba(99,179,237,0.06) 0%,transparent 60%),radial-gradient(ellipse 40% 60% at 80% 80%,rgba(104,211,145,0.04) 0%,transparent 60%);pointer-events:none;z-index:0}
+header{position:sticky;top:0;z-index:100;background:rgba(6,10,18,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px;gap:1rem}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--accent);white-space:nowrap}.logo span{color:var(--accent2)}
+.nav-tabs{display:flex;gap:3px;flex-wrap:wrap}
+.nav-tab{padding:5px 12px;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:500;border:none;background:transparent;color:var(--muted);transition:all 0.2s;white-space:nowrap}
+.nav-tab:hover{color:var(--text);background:var(--surface2)}
+.nav-tab.active{background:var(--accent);color:#060a12}
+.progress-badge{font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--accent2);background:rgba(104,211,145,0.1);border:1px solid rgba(104,211,145,0.3);padding:4px 10px;border-radius:20px;white-space:nowrap}
+main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:1.5rem}
+.section{display:none}.section.active{display:block}
+.hero{text-align:center;padding:2rem 0 1.5rem}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:800;line-height:1.1;margin-bottom:1rem}
+.grad{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--muted);font-size:1rem;max-width:500px;margin:0 auto 1.5rem;line-height:1.7}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.2rem;text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--accent)}
+.stat-label{color:var(--muted);font-size:0.82rem;margin-top:4px}
+.section-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:10px}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent)}
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.month-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem}
+.month-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.month-dot{width:10px;height:10px;border-radius:50%}
+.month-card ul{list-style:none}
+.month-card li{padding:4px 0;font-size:0.8rem;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.04);display:flex;align-items:flex-start;gap:5px}
+.month-card li::before{content:'→';color:var(--accent);flex-shrink:0}
+.topics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:2rem}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.3rem;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+.topic-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 30px rgba(99,179,237,0.1)}
+.topic-card.done{border-color:rgba(104,211,145,0.4)}
+.topic-card.done::after{content:'✓';position:absolute;top:10px;right:12px;color:var(--accent2);font-size:1rem;font-weight:700}
+.topic-num{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);margin-bottom:5px}
+.topic-name{font-weight:600;font-size:0.88rem;line-height:1.4}
+.topic-meta{margin-top:8px;display:flex;gap:6px}
+.tag{font-size:0.68rem;padding:2px 7px;border-radius:6px;font-weight:500}
+.tag-k{background:rgba(99,179,237,0.15);color:var(--accent)}
+.tag-a{background:rgba(246,173,85,0.15);color:var(--accent3)}
+.tag-ky{background:rgba(252,129,129,0.15);color:var(--danger)}
+.content-header{display:flex;align-items:center;gap:12px;margin-bottom:1.2rem;flex-wrap:wrap}
+.back-btn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:0.82rem;font-family:inherit;transition:all 0.15s}
+.back-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tab-btns{display:flex;gap:6px;margin-bottom:1.2rem;flex-wrap:wrap}
+.anki-btn{padding:7px 16px;border-radius:10px;cursor:pointer;font-size:0.85rem;font-weight:600;font-family:inherit;border:none;transition:all 0.15s}
+.btn-blue{background:var(--accent);color:#060a12}
+.btn-orange{background:var(--accent3);color:#060a12}
+.btn-red{background:var(--danger);color:#060a12}
+.btn-green{background:var(--accent2);color:#060a12}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.konspekt-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.8rem;line-height:1.8}
+.konspekt-box h3{font-family:'Syne',sans-serif;color:var(--accent);margin:1.2rem 0 0.5rem;font-size:1.05rem}
+.konspekt-box h3:first-child{margin-top:0}
+.konspekt-box p{color:#cbd5e0;font-size:0.91rem;margin-bottom:0.6rem}
+.konspekt-box ul{list-style:none;padding-left:1rem;margin-bottom:0.6rem}
+.konspekt-box ul li{font-size:0.89rem;color:#cbd5e0;padding:3px 0}
+.konspekt-box ul li::before{content:'• ';color:var(--accent2)}
+.konspekt-box strong{color:var(--accent3)}
+.konspekt-box .highlight{background:rgba(99,179,237,0.1);border-left:3px solid var(--accent);padding:0.8rem 1rem;border-radius:0 8px 8px 0;margin:0.8rem 0}
+.flashcard{perspective:1000px;height:260px;cursor:pointer;margin-bottom:1rem}
+.flashcard-inner{width:100%;height:100%;transition:transform 0.5s;transform-style:preserve-3d;position:relative}
+.flashcard.flipped .flashcard-inner{transform:rotateY(180deg)}
+.card-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;background:var(--surface);border:1px solid var(--border);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;text-align:center}
+.card-face.back{transform:rotateY(180deg);background:var(--surface2);border-color:var(--accent)}
+.card-label{font-size:0.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:0.8rem;text-transform:uppercase;letter-spacing:1px}
+.card-q{font-size:1rem;font-weight:600;line-height:1.5;color:var(--text)}
+.card-a{font-size:0.9rem;color:var(--accent2);line-height:1.6}
+.card-hint{margin-top:0.8rem;font-size:0.75rem;color:var(--muted)}
+.card-counter{font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--muted);padding:6px 0}
+.rating-row{display:flex;gap:8px;justify-content:center;margin-top:0.5rem}
+.keys-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
+.keys-badge{display:inline-block;padding:2px 9px;border-radius:6px;font-size:0.7rem;font-weight:600;margin-bottom:10px}
+.badge-q{background:rgba(252,129,129,0.2);color:var(--danger)}
+.badge-o{background:rgba(246,173,85,0.2);color:var(--accent3)}
+.badge-os{background:rgba(104,211,145,0.2);color:var(--accent2)}
+.keys-title{font-weight:700;font-size:0.95rem;margin-bottom:8px}
+.keys-scenario{font-size:0.88rem;color:#a0aec0;line-height:1.7;margin-bottom:0.8rem;padding:0.8rem;background:rgba(255,255,255,0.03);border-radius:10px;border-left:3px solid var(--accent)}
+.keys-question{font-weight:600;margin-bottom:0.8rem;color:var(--accent3);font-size:0.9rem}
+.reveal-btn{background:transparent;border:1px solid var(--border);color:var(--text);padding:9px 18px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:0.88rem;transition:all 0.2s;width:100%}
+.reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
+.keys-answer{margin-top:0.8rem;padding:1rem;background:rgba(104,211,145,0.05);border:1px solid rgba(104,211,145,0.2);border-radius:10px;font-size:0.86rem;color:#a0aec0;line-height:1.7;display:none}
+.keys-answer.show{display:block}
+.progress-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.progress-label{font-size:0.8rem;width:200px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.progress-bar{flex:1;height:7px;background:var(--surface2);border-radius:20px;overflow:hidden}
+.progress-fill{height:100%;border-radius:20px;background:linear-gradient(to right,var(--accent),var(--accent2));transition:width 0.5s ease}
+.progress-pct{font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--accent);width:34px}
+.month-sep{grid-column:1/-1;font-family:'Syne',sans-serif;font-weight:700;color:var(--muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;padding:4px 0}
+select{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:8px;font-family:inherit;font-size:0.82rem}
+.done-check{background:rgba(104,211,145,0.2)!important;border-color:rgba(104,211,145,0.5)!important;color:var(--accent2)!important}
+.finish-box{text-align:center;padding:2.5rem}
+@media(max-width:700px){.stats-row{grid-template-columns:1fr 1fr}.plan-grid{grid-template-columns:1fr}.topics-grid{grid-column:1}.nav-tab{font-size:0.72rem;padding:5px 8px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Neuron<span>UZB</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="show('home')">🏠 Bosh sahifa</button>
+    <button class="nav-tab" onclick="show('topics')">📚 Mavzular</button>
+    <button class="nav-tab" onclick="show('anki')">🃏 Anki</button>
+    <button class="nav-tab" onclick="show('keys')">🩺 Keyslar</button>
+    <button class="nav-tab" onclick="show('progress')">📊 Progress</button>
+  </div>
+  <div class="progress-badge" id="badge">0 / 23</div>
+</header>
+<main>
+
+<!-- HOME -->
+<div class="section active" id="home">
+  <div class="hero">
+    <h1>3 oyda <span class="grad">Neyroanatomiya</span><br>mukammal o'rgan</h1>
+    <p>Konspekt, Anki kartochkalar va klinik keyslar bilan ilmiy asosda tayyorlangan o'quv platformasi.</p>
+  </div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num">23</div><div class="stat-label">Jami mavzu</div></div>
+    <div class="stat-card"><div class="stat-num">184</div><div class="stat-label">Anki kartochka</div></div>
+    <div class="stat-card"><div class="stat-num">69</div><div class="stat-label">Klinik keys</div></div>
+  </div>
+  <div class="section-title">3 oylik o'quv rejasi</div>
+  <div class="plan-grid">
+    <div class="month-card">
+      <div class="month-title"><div class="month-dot" style="background:#63b3ed"></div>1-OY — Asoslar</div>
+      <ul>
+        <li>Neyron tuzilishi va turlari (1)</li><li>Glial to'qimalar (2)</li>
+        <li>Orqa miya anatomiyasi (3-5)</li><li>Sezgi sistemasi (6-7)</li>
+        <li>Harakat sistemasi (8-9)</li><li>Haftalik test va takrorlash</li>
+      </ul>
+    </div>
+    <div class="month-card">
+      <div class="month-title"><div class="month-dot" style="background:#68d391"></div>2-OY — Kranial Nervlar</div>
+      <ul>
+        <li>12-juft Hypoglossal (10)</li><li>11-juft Accessory (11)</li>
+        <li>10-juft Vagus (12)</li><li>9-juft Glossopharyngeal (13)</li>
+        <li>8-juft Vestibulocochlear (14)</li><li>7-juft Facial (15)</li>
+        <li>5-juft Trigeminal (16)</li><li>3-4-6-juft Okulomotor (17)</li>
+        <li>2-juft Optik (18)</li><li>1-juft Olfaktor (19)</li>
+      </ul>
+    </div>
+    <div class="month-card">
+      <div class="month-title"><div class="month-dot" style="background:#f6ad55"></div>3-OY — Yuqori Markazlar</div>
+      <ul>
+        <li>Miyacha va ataksiya (20)</li><li>Ekstrapiramidal (21)</li>
+        <li>Katta yarimsharlari (22)</li><li>Avtonom nerv sistemasi (23)</li>
+        <li>Yakuniy amaliy imtihon</li>
+      </ul>
+    </div>
+  </div>
+  <div class="section-title" style="margin-top:1.5rem">Tezkor kirish</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="anki-btn btn-blue" onclick="show('topics')">📚 Mavzular</button>
+    <button class="anki-btn btn-orange" onclick="show('anki')">🃏 Anki boshlash</button>
+    <button class="anki-btn btn-red" onclick="show('keys')">🩺 Klinik keyslar</button>
+  </div>
+</div>
+
+<!-- TOPICS -->
+<div class="section" id="topics">
+  <div class="section-title">Barcha mavzular</div>
+  <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1.2rem">Mavzuni bosing → konspekt, anki va keyslarni ko'ring</p>
+  <div class="topics-grid" id="topicsGrid"></div>
+</div>
+
+<!-- TOPIC DETAIL -->
+<div class="section" id="detail">
+  <div class="content-header">
+    <button class="back-btn" onclick="show('topics')">← Orqaga</button>
+    <h2 id="detailTitle" style="font-family:'Syne',sans-serif;font-size:1.1rem"></h2>
+  </div>
+  <div class="tab-btns">
+    <button class="anki-btn btn-blue" onclick="showTab('k')">📝 Konspekt</button>
+    <button class="anki-btn btn-orange" onclick="showTab('a')">🃏 Anki</button>
+    <button class="anki-btn btn-red" onclick="showTab('ky')">🩺 Keyslar</button>
+    <button class="anki-btn btn-ghost" id="doneBtn" onclick="markDone()">✓ Tugatdim</button>
+  </div>
+  <div id="tab-k"></div>
+  <div id="tab-a" style="display:none"></div>
+  <div id="tab-ky" style="display:none"></div>
+</div>
+
+<!-- ANKI -->
+<div class="section" id="anki">
+  <div class="section-title">🃏 Anki — Kartochkalar</div>
+  <div style="display:flex;gap:8px;margin-bottom:1.2rem;flex-wrap:wrap">
+    <select id="ankiSel"><option value="">Barcha mavzular (aralash)</option></select>
+    <button class="anki-btn btn-blue" onclick="startGlobalAnki()">Boshlash</button>
+  </div>
+  <div id="ankiArea"></div>
+</div>
+
+<!-- KEYS -->
+<div class="section" id="keys">
+  <div class="section-title">🩺 Klinik Keyslar</div>
+  <div style="display:flex;gap:8px;margin-bottom:1.2rem;flex-wrap:wrap">
+    <select id="keysSel"><option value="">Barcha mavzular</option></select>
+    <button class="anki-btn btn-red" onclick="showGlobalKeys()">Ko'rish</button>
+  </div>
+  <div id="keysArea"></div>
+</div>
+
+<!-- PROGRESS -->
+<div class="section" id="progress">
+  <div class="section-title">📊 O'quv progressi</div>
+  <div id="progressBars"></div>
+  <div class="stats-row" style="margin-top:1rem">
+    <div class="stat-card"><div class="stat-num" id="doneCount">0</div><div class="stat-label">Tugatilgan mavzular</div></div>
+    <div class="stat-card"><div class="stat-num" id="studiedCount">0</div><div class="stat-label">O'rganilgan kartochkalar</div></div>
+    <div class="stat-card"><div class="stat-num" id="pctCount">0%</div><div class="stat-label">Umumiy progress</div></div>
+  </div>
+  <div style="margin-top:1rem">
+    <button class="anki-btn btn-ghost" onclick="if(confirm('Barcha progressni o\'chirish?')){st.done=[];st.studied=0;save();show('progress')}">🗑 Progressni tiklash</button>
+  </div>
+</div>
+
+</main>
+<script>
+// ===================== DATA =====================
+const TOPICS=[
+  {id:1,name:"Nerv to'qimasini tuzilishi va funksiyasi. Neyron turlari",m:1},
+  {id:2,name:"Glial to'qimalar ya'ni Neyroglialar",m:1},
+  {id:3,name:"Orqa miya Klinik anatomiyasi Topik diagnostikasi",m:1},
+  {id:4,name:"Orqa miyaning oq moddasi va uning o'tkazuv yo'llari",m:1},
+  {id:5,name:"Orqa miyaning Kulrang moddasi",m:1},
+  {id:6,name:"Sezgi sistemasining tuzilishi",m:1},
+  {id:7,name:"Sezgi sistemasini tekshirish va buzilishlari",m:1},
+  {id:8,name:"Harakat sistemasi",m:1},
+  {id:9,name:"Harakat sistemasini tekshirish va buzilishlari",m:1},
+  {id:10,name:"12-juft kranial nerv (Hypoglossal)",m:2},
+  {id:11,name:"11-juft kranial nerv (Accessory)",m:2},
+  {id:12,name:"10-juft kranial nerv (Vagus)",m:2},
+  {id:13,name:"9-juft kranial nerv (Glossopharyngeal)",m:2},
+  {id:14,name:"8-juft kranial nerv (Vestibulocochlear)",m:2},
+  {id:15,name:"7-juft kranial nerv (Facial)",m:2},
+  {id:16,name:"5-juft kranial nerv (Trigeminal)",m:2},
+  {id:17,name:"3-4-6-juft kranial nervlar (Okulomotor guruh)",m:2},
+  {id:18,name:"2-juft kranial nerv (Optik)",m:2},
+  {id:19,name:"1-juft kranial nerv (Olfaktor) va Limbik sistema",m:2},
+  {id:20,name:"Miyacha Klinik anatomiyasi va Miyacha ataksiyalari",m:3},
+  {id:21,name:"Ekstrapiramidal sistema va Parkinson sindromi",m:3},
+  {id:22,name:"Bosh miya katta yarimsharlari va Qon aylanish",m:3},
+  {id:23,name:"Periferik va Avtonom Nerv sistemasi",m:3},
+];
+
+const DATA={
+  konspekt:{
+    1:`<h3>Nerv to'qimasining tuzilishi</h3>
+<p>Nerv to'qimasi <strong>neyronlar</strong> va <strong>glial hujayralar</strong>dan iborat. Neyron — asosiy tarkibiy va funksional birlik bo'lib, qo'zg'alish va impulsni o'tkazish xususiyatiga ega.</p>
+<h3>Neyronning tuzilishi</h3>
+<ul><li><strong>Soma (hujayra tanasi)</strong> — yadro va organoidlar joylashgan</li><li><strong>Dendritlar</strong> — impulsni somaga olib keladi (afferent)</li><li><strong>Akson</strong> — impulsni somadan uzoqlashtiради (efferent)</li><li><strong>Sinaps</strong> — neyronlar orasidagi ulanish joyi</li></ul>
+<h3>Neyron turlari (funksiya bo'yicha)</h3>
+<ul><li><strong>Afferent (sezuvchi)</strong> — periferiyadan markazga</li><li><strong>Efferent (harakat)</strong> — markazdan periferiyaga</li><li><strong>Oraliq (assotsiativ)</strong> — markaz ichida</li></ul>
+<h3>Neyron turlari (o'simtalar soni bo'yicha)</h3>
+<ul><li>Unipolar — 1 o'simta (pseudounipolar — orqa miya ganglioni)</li><li>Bipolar — 2 o'simta (retina, vestibular)</li><li>Multipolar — ko'p o'simta (motor neyronlar)</li></ul>
+<div class="highlight"><strong>Eslab qoling:</strong> Neyronlar mitoz yo'li bilan bo'linmaydi. Regeneratsiya faqat aksonal darajada mumkin.</div>`,
+    2:`<h3>Glial to'qimalar ta'rifi</h3>
+<p>Neyroglialar neyronlarga qaraganda <strong>10 marta ko'p</strong> bo'lib, ular qo'llovchi, himoya qiluvchi va oziqlantirishda ishtirok etadi.</p>
+<h3>Glial hujayra turlari</h3>
+<ul><li><strong>Astrotsitlar</strong> — qon-miya to'sig'ini hosil qiladi, K⁺ ionlarini tartibga soladi</li><li><strong>Oligodendrotsitlar</strong> — MNS da mielin qobig'ini hosil qiladi</li><li><strong>Shvann hujayralari</strong> — PNS da mielin qobig'ini hosil qiladi</li><li><strong>Mikroglia</strong> — MNS ning immunologik himoyasi (fagotsitoz)</li><li><strong>Ependimal hujayralar</strong> — miya qorinchalarini qoplaydi, BOM ni hosil qiladi</li></ul>
+<h3>Mielinning ahamiyati</h3>
+<p>Mielin qobig'i <strong>Ranvier bo'g'imlari</strong> orasida saltatory o'tkazuvchanlikni ta'minlaydi. Bu tez va energiya tejamkor impuls o'tkazishga imkon beradi.</p>
+<div class="highlight"><strong>Klinik:</strong> Multiplе skleroz — MNS da demielinizatsiya. Giyyen-Barre — PNS da demielinizatsiya.</div>`,
+    3:`<h3>Orqa miya anatomiyasi</h3>
+<p>Orqa miya <strong>foramen magnum</strong>dan <strong>L1-L2</strong> vertebragacha joylashgan. Uzunligi ≈45 sm, 31 juft nerv ildizi chiqadi.</p>
+<h3>Segmentar tuzilishi</h3>
+<ul><li>Servikal — 8 segment (C1-C8)</li><li>Torakal — 12 segment (T1-T12)</li><li>Lumbar — 5 segment (L1-L5)</li><li>Sakral — 5 segment (S1-S5)</li><li>Koksigeal — 1 segment (Co1)</li></ul>
+<h3>Topik diagnostika</h3>
+<ul><li><strong>C3-C5</strong> — diafragma innervatsiyasi</li><li><strong>C5-C8, Th1</strong> — qo'l innervatsiyasi (brachial plexus)</li><li><strong>L2-S2</strong> — oyoq innervatsiyasi (lumbo-sacral plexus)</li><li><strong>S2-S4</strong> — siydik pufagi va to'g'ri ichak</li></ul>
+<div class="highlight"><strong>Eslab qoling:</strong> Dermatom xaritasini bilish — orqa miya zararlangan joyi aniqlashda asosiy usul.</div>`,
+    4:`<h3>Orqa miyaning oq moddasi</h3>
+<p>Oq modda <strong>miyelinlangan aksonlar</strong>dan iborat bo'lib, 3 ta kanat (funiculus) hosil qiladi: old, yon, orqa.</p>
+<h3>Asosiy o'tkazuv yo'llari</h3>
+<ul><li><strong>Tractus corticospinalis (piramidal)</strong> — ixtiyoriy harakat, lateral va ventral</li><li><strong>Tractus spinothalamicus</strong> — og'riq, harorat (lateral), teginish va bosim (ventral)</li><li><strong>Fasciculus gracilis va cuneatus</strong> — vibrasiya, propriotseptsiya, diskriminatsiya</li><li><strong>Tractus spinocerebellaris</strong> — muskul-pay propriotseptsiyasi miyachaga</li></ul>
+<h3>Chatishtiring</h3>
+<ul><li>Corticospinalis — medullada chatishadi (piramidal chatishtirish)</li><li>Spinothalamicus — orqa miyada chatishadi (old kommissura orqali)</li><li>Fasciculus gracilis/cuneatus — medullada chatishadi</li></ul>
+<div class="highlight"><strong>Brown-Séquard sindromi:</strong> Orqa miya yarmining zararlanishi — ipsilateral harakat yo'qolishi + kontralateral og'riq/harorat yo'qolishi.</div>`,
+    5:`<h3>Orqa miyaning kulrang moddasi</h3>
+<p>Kulrang modda "H" shaklida bo'lib, neyron somalari joylashgan. Old shox, orqa shox va yon shoxdan iborat.</p>
+<h3>Rexed plastinkalari (I-X)</h3>
+<ul><li><strong>I-II plastinka</strong> — og'riq va harorat (substantia gelatinosa)</li><li><strong>III-IV</strong> — epikritik sezgi</li><li><strong>V-VI</strong> — propriotseptiv sezgi</li><li><strong>VII</strong> — avtonomik neyronlar (yon shox — C8-L2)</li><li><strong>VIII-IX</strong> — motor neyronlar (old shox)</li><li><strong>X</strong> — markaziy kanal atrofi</li></ul>
+<h3>Old shox motor neyronlari</h3>
+<ul><li>Alpha motor neyronlar — muskul tolalarini innervatsiya qiladi</li><li>Gamma motor neyronlar — muskul dukchalarini innervatsiya qiladi</li><li>Renshaw hujayralari — tormozlovchi interneyronlar</li></ul>`,
+    6:`<h3>Sezgi sistemasining tuzilishi</h3>
+<p>Sezgi sistemasi <strong>3 neyronli zanjir</strong>dan iborat: 1-neyron → 2-neyron → 3-neyron → korteks.</p>
+<h3>Sezgi turlari</h3>
+<ul><li><strong>Yuzaki sezgi</strong> — og'riq, harorat, yengil teginish</li><li><strong>Chuqur sezgi</strong> — vibrasiya, bosim, propriotseptsiya, muskul-pay hissi</li><li><strong>Murakkab sezgi</strong> — stereognoziya, diskriminatsiya, grafesteziya</li></ul>
+<h3>Og'riq va harorat yo'li (spinothalamicus lateralis)</h3>
+<ul><li>1-neyron: Orqa miya ganglioni</li><li>2-neyron: Orqa shox (I-II plastinka) → old kommissura orqali chatishadi → lateral funiculus → thalamus</li><li>3-neyron: Thalamus → postsentral girus (S1)</li></ul>
+<h3>Chuqur sezgi yo'li (lemniscal)</h3>
+<ul><li>1-neyron: Orqa miya ganglioni → ipsilateral orqa kanat</li><li>2-neyron: Medulla (nucl. gracilis/cuneatus) → chatishadi → medial lemniscus → thalamus</li><li>3-neyron: Thalamus → postsentral girus</li></ul>`,
+    7:`<h3>Sezgini tekshirish usullari</h3>
+<ul><li><strong>Og'riq</strong> — igna uchi bilan</li><li><strong>Harorat</strong> — issiq/sovuq idish</li><li><strong>Teginish</strong> — paxta bilan</li><li><strong>Vibrasiya</strong> — kamerton (128 Hz)</li><li><strong>Propriotseptsiya</strong> — barmoqni passiv harakatga keltirish</li><li><strong>Stereognoziya</strong> — ko'zni yumdirgan holda predmetni tanish</li></ul>
+<h3>Sezgi buzilishlari turlari</h3>
+<ul><li><strong>Anesteziya</strong> — sezgi yo'qolishi</li><li><strong>Gipesteziya</strong> — sezgi kamayishi</li><li><strong>Giperesteziya</strong> — sezgi kuchayishi</li><li><strong>Paresteziya</strong> — o'z-o'zidan paydo bo'luvchi nojo'ya sezgi</li><li><strong>Dizesteziya</strong> — noto'g'ri sezgi (teginish = og'riq)</li><li><strong>Allodinia</strong> — og'riqsiz ta'sirdan og'riq paydo bo'lishi</li></ul>
+<h3>Buzilish turlari (topografik)</h3>
+<ul><li>Periferik tip — dermatom bo'yicha</li><li>Segmentar tip — segment bo'yicha</li><li>O'tkazuvchanlik tipi — zararlangan joydan pastki qism</li><li>Korteks tipi — kontralateral yarim tan</li></ul>`,
+    8:`<h3>Harakat sistemasi tuzilishi</h3>
+<p>Harakat sistemasi <strong>markaziy</strong> (piramidal + ekstrapiramidal) va <strong>periferik</strong> motor neyronlardan iborat.</p>
+<h3>Piramidal sistema</h3>
+<ul><li><strong>Tractus corticospinalis</strong> — tanaga (soma)</li><li><strong>Tractus corticobulbaris</strong> — kranial nervlar yadrolariga</li><li>Markaziy motor neyron (MHN) — presentral girusdan boshlanadi</li><li>Periferik motor neyron (PHN) — old shoxdan boshlanadi</li></ul>
+<h3>MHN vs PHN zararlanishi</h3>
+<ul><li><strong>MHN</strong>: Spastik falaj, klonus, Babinski (+), muskullar atrofiyalanmaydi, reflekslar kuchayadi</li><li><strong>PHN</strong>: Flaccid falaj, muskullar atrofiyalanadi, fassikulatsiya, reflekslar yo'qoladi</li></ul>`,
+    9:`<h3>Harakat sistemasini tekshirish</h3>
+<ul><li><strong>Kuch</strong> — 0-5 balli shкала (MRC)</li><li><strong>Tonus</strong> — passiv harakatda qarshilik</li><li><strong>Reflekslar</strong> — tizza (L3-L4), achilles (S1-S2), biceps (C5-C6)</li><li><strong>Patologik reflekslar</strong> — Babinski, Oppenheim, Gordon</li><li><strong>Koordinatsiya</strong> — burun-barmoq sinovi, tovon-tizza sinovi</li></ul>
+<h3>Harakat buzilishlari</h3>
+<ul><li><strong>Monoplegia</strong> — 1 oyoq yoki qo'l falaji</li><li><strong>Hemiplegia</strong> — bir tomonlama falaj</li><li><strong>Paraplegia</strong> — ikki oyoq falaji</li><li><strong>Tetraplegia</strong> — to'rt oyoq-qo'l falaji</li><li><strong>Paresis</strong> — kuchning qisman yo'qolishi</li></ul>
+<h3>Muskullar kuchi shkалasi (MRC)</h3>
+<ul><li>0 — harakat yo'q</li><li>1 — muskullar qisqaradi, harakat yo'q</li><li>2 — gravitatsiyasiz harakat bor</li><li>3 — gravitatsiyaga qarshi harakat bor</li><li>4 — qarshilikka qarshi qisman harakat</li><li>5 — normal kuch</li></ul>`,
+    10:`<h3>XII-juft: N. Hypoglossus</h3>
+<p><strong>Funksiyasi:</strong> Til muskullarini innervatsiya qiladi (harakat nervi).</p>
+<h3>Anatomik yo'l</h3>
+<ul><li>Yadro: Medullaning arka qismida — nucl. n. hypoglossi</li><li>Chiqish joyi: Sulcus anterolateralis orqali medulladan</li><li>Kanaldan o'tadi: Canalis hypoglossi (occipital suyak)</li></ul>
+<h3>Tekshirish</h3>
+<ul><li>Tilni og'iz tashqarisiga chiqarish — zararlangan tomonga og'adi</li><li>Tilni pastga bosib turganda qarang</li><li>Fassikulatsiya va atrofiyani tekshiring (PHN zararlanishi)</li></ul>
+<h3>Zararlanish belgilari</h3>
+<ul><li><strong>Periferik (PHN)</strong>: Ipsilateral til paralichi, atrofiya, fassikulatsiya, til zararlangan tomonga og'adi</li><li><strong>Markaziy (MHN)</strong>: Kontralateral parezis, atrofiya yo'q</li></ul>
+<div class="highlight"><strong>Eslab qoling:</strong> Til zararlangan tomonga og'adi — chunki qarama-qarshi muskul ustunlik qiladi.</div>`,
+    11:`<h3>XI-juft: N. Accessorius</h3>
+<p><strong>Funksiyasi:</strong> M. sternocleidomastoideus va m. trapezius harakati.</p>
+<h3>Anatomik tuzilishi</h3>
+<ul><li>Kranial qism: Nucleus ambiguus → vagus bilan birlashadi</li><li>Spinal qism: C1-C5 old shox → foramen magnumdan kiradi → foramen jugulare orqali chiqadi</li></ul>
+<h3>Tekshirish</h3>
+<ul><li>Boshni qarshilik bilan burish — SCM tekshiriladi (qarama-qarshi tomon)</li><li>Yelkani ko'tarish — trapezius tekshiriladi (bir xil tomon)</li></ul>
+<h3>Zararlanish belgilari</h3>
+<ul><li>Boshni zararlangan tomon qarama-qarshisiga burish qiyinlashadi</li><li>Yelka pastga tushib turadi (ptoz)</li><li>Scapulaning "qanot" ko'rinishi</li></ul>`,
+    12:`<h3>X-juft: N. Vagus</h3>
+<p><strong>Funksiyasi:</strong> Eng uzun kranial nerv — yutish, ovoz, vegetativ innervatsiya.</p>
+<h3>Anatomik yo'l</h3>
+<ul><li>Yadrolar: Nucleus ambiguus (harakat), Nucleus dorsalis vagi (parasimpatik), Nucleus tractus solitarii (sezgi)</li><li>Foramen jugulare orqali chiqadi</li><li>Innervatsiya: Bo'qoq, halqum, qizilo'ngach, torakal va abdominal organlar</li></ul>
+<h3>Tekshirish</h3>
+<ul><li>Yumshoq tanglay harakati — "A" deyilganda</li><li>Ovoz balandligi va sifati</li><li>Yutish funksiyasi (disfagiya?)</li><li>Uvula — sog'lom tomonga og'adi</li></ul>
+<h3>Zararlanish belgilari</h3>
+<ul><li>Disfagiya (yutish qiyinligi)</li><li>Dizartria (nutq buzilishi)</li><li>Disfoniya yoki afoniya (ovoz yo'qolishi)</li><li>Uvula zararlangan tomon qarama-qarshisiga og'adi</li><li>Bulbar falaj</li></ul>`,
+    13:`<h3>IX-juft: N. Glossopharyngeus</h3>
+<p><strong>Funksiyasi:</strong> Til orqa 1/3 ta'm sezgisi, halqum sezgisi, parotid bez sekretsiyasi.</p>
+<h3>Anatomik yo'l</h3>
+<ul><li>Yadrolar: Nucleus ambiguus (harakat), Nucleus tractus solitarii (ta'm), Nucleus salivatorius inferior (sekretor)</li><li>Foramen jugulare orqali chiqadi</li></ul>
+<h3>Tekshirish</h3>
+<ul><li>Ta'm sezgisi: Shirin, sho'r, achchiq (til orqa qismi)</li><li>Halqum refleksi (gag reflex)</li><li>Palatin arkining harakati</li></ul>
+<h3>Zararlanish belgilari</h3>
+<ul><li>Til orqa 1/3 ta'm sezgisi yo'qolishi</li><li>Disfagiya</li><li>Glossofaringeal neyralg'iya (halqum va quloq og'rig'i)</li><li>Parotid bez sekretsiyasi buzilishi</li></ul>`,
+    14:`<h3>VIII-juft: N. Vestibulocochlearis</h3>
+<p><strong>Funksiyasi:</strong> Eshitish (cochlear qism) va muvozanat (vestibular qism).</p>
+<h3>Cochlear qism</h3>
+<ul><li>Spirally ganglion → cochlear nucleus → medial geniculate body → temporal lob</li><li>Tekshirish: Akumetriya (mayoqcha, veber, rinne sinovlari)</li></ul>
+<h3>Vestibular qism</h3>
+<ul><li>Scarpa ganglioni → 4 vestibular yadro → miyacha, okulomotor yadrolar, orqa miya</li><li>Tekshirish: Romberg sinovi, tandem yurish, Dix-Hallpike</li></ul>
+<h3>Zararlanish belgilari</h3>
+<ul><li><strong>Cochlear</strong>: Gipakuziya, neyrosensor karlik, tinnitus</li><li><strong>Vestibular</strong>: Bosh aylanishi (vertigo), nistagm, ataksiya</li></ul>
+<div class="highlight"><strong>BPPV</strong> — Benign Paroksizmal Pozitsion Vertigo: Otolitlar o'rin almashganda. Dix-Hallpike (+).</div>`,
+    15:`<h3>VII-juft: N. Facialis</h3>
+<p><strong>Funksiyasi:</strong> Yuz mimikasi, ta'm (til old 2/3), lacrimal va submandibular bezlar.</p>
+<h3>Anatomik yo'l</h3>
+<ul><li>Nucleus facialis → internal auditory meatus → facial kanal → stylomastoid foramen</li><li>Shoxlari: Temporal, zygomatik, buccal, marginal mandibular, servikal</li></ul>
+<h3>Tekshirish</h3>
+<ul><li>Peshonani ajinshtirish</li><li>Ko'zni yumish (lagoftalm?)</li><li>Lablarni cho'zish va plyushcha</li><li>Ta'm: Shakar, tuz (til old 2/3)</li></ul>
+<h3>Markaziy va periferik farq</h3>
+<ul><li><strong>Markaziy</strong>: Faqat quyi yuz falaji (peshona saqlanadi — ikki tomonlama innervatsiya)</li><li><strong>Periferik (Bell's palsy)</strong>: Yuz barchasi falajlashadi, lagoftalm, ta'm buzilishi</li></ul>`,
+    16:`<h3>V-juft: N. Trigeminus</h3>
+<p><strong>Funksiyasi:</strong> Yuz sezgisi, chaynash muskullari harakati.</p>
+<h3>3 ta shox</h3>
+<ul><li><strong>V1 — Oftalmik</strong>: Forehead, ko'z, burun — foramen supraorbitale</li><li><strong>V2 — Maxillar</strong>: Yonoq, yuqori tish, lab — foramen rotundum → foramen infraorbitale</li><li><strong>V3 — Mandibular</strong>: Pastki tish, jag', til old 2/3 — foramen ovale</li></ul>
+<h3>Tekshirish</h3>
+<ul><li>Yuz sezgisi — uchala shox bo'yicha</li><li>Chaynash muskullari kuchi</li><li>Korneal refleks (V1 afferent + VII efferent)</li><li>Jag' refleksi (V3 afferent + V3 efferent)</li></ul>
+<h3>Trigeminal neyralg'iya</h3>
+<p>Qisqa, og'ir, elektr urishi kabi og'riq. Trigger zona bor. Ko'pincha V2 yoki V3 shoxida. Davolash: Karbamazepín.</p>`,
+    17:`<h3>III-IV-VI-juft: Okulomotor guruh</h3>
+<h3>III-juft: N. Oculomotorius</h3>
+<ul><li>Barcha ko'z muskullari (LR va SO dan tashqari), ptoz (levator palpebrae), miosis</li><li>Zararlanish: Ptoz, "down-and-out" ko'z, midriaz, diplopia</li></ul>
+<h3>IV-juft: N. Trochlearis</h3>
+<ul><li>M. obliquus superior — ko'zni pastga va ichkariga burish</li><li>Zararlanish: Pastga qarayotganda diplopia (zinapoyadan tushishda)</li></ul>
+<h3>VI-juft: N. Abducens</h3>
+<ul><li>M. rectus lateralis — ko'zni yon tomonga burish</li><li>Zararlanish: Medial strabizm (ko'z ichkariga tortilgan), yonba-yon harakatda diplopia</li></ul>
+<h3>Ko'z harakatlarini tekshirish</h3>
+<ul><li>9 yo'nalishda ko'z harakati</li><li>Diplopia: Qaysi yo'nalishda?</li><li>Nistagm bormi?</li><li>Pupil reaksiyasi: To'g'ri va hamkorlik</li></ul>`,
+    18:`<h3>II-juft: N. Opticus</h3>
+<p><strong>Funksiyasi:</strong> Ko'rish: retinadan chiasma orqali korteksgacha.</p>
+<h3>Ko'rish yo'li</h3>
+<ul><li>Retina (fotoretseptorlar) → n. opticus → chiasma opticum → tractus opticus → corpus geniculatum laterale → radiatio optica → occipital korteks (V1)</li><li>Chiasma da nasal tolalar chatishadi, temporal tolalar chatishmaydi</li></ul>
+<h3>Ko'rish maydonlari va zararlanish</h3>
+<ul><li><strong>Bir ko'z ko'rmasligi</strong> — n. opticus zararlanishi</li><li><strong>Bitemporalʼ gemianopsiya</strong> — chiasma (gipofiz o'sishi)</li><li><strong>Homonim gemianopsiya</strong> — tractus opticus yoki korteks</li><li><strong>Kvadrantanopsiya</strong> — radiatio optica qisman zararlanishi</li></ul>
+<h3>Tekshirish</h3>
+<ul><li>Ko'rish o'tkirligi (Snellen)</li><li>Ko'rish maydonlari (konfrontatsiya)</li><li>Ko'z tubi ko'rish (oftalmoskopiya)</li><li>Pupil reaksiyasi</li></ul>`,
+    19:`<h3>I-juft: N. Olfactorius</h3>
+<p><strong>Funksiyasi:</strong> Hid bilish.</p>
+<ul><li>Hid retseptorlari (burun shilliq) → fila olfactoria → lamina cribrosa → bulbus olfactorius → korteks (uncus)</li><li>Tekshirish: Ko'zni yumdirib turli hidlarni tanish (qahva, atir)</li><li>Zararlanish: Anosmiya (hid bilmaslik) — etmoid suyak sinishi, meningioma</li></ul>
+<h3>Limbik sistema</h3>
+<p>Limbik sistema — hissiyot, xotira va vegetativ funksiyalarni boshqaradi.</p>
+<ul><li><strong>Tarkibi</strong>: Hippocampus, amigdala, cingulate girus, hypothalamus, thalamus</li><li><strong>Papez doirasi</strong>: Hippocampus → fornix → corpus mamillare → thalamus → cingulate → hippocampus</li><li><strong>Amigdala</strong>: Qo'rquv, tajovuzkorlik hissiyoti</li><li><strong>Hippocampus</strong>: Yangi xotirani yozib olish (declarative memory)</li></ul>
+<div class="highlight"><strong>Klinik:</strong> Hippocampus zararlanishi → anterogradli amneziya (Alzheimer). Amigdala zararlanishi → Kluver-Bucy sindromi.</div>`,
+    20:`<h3>Miyacha anatomiyasi</h3>
+<p>Miyacha harakat koordinatsiyasi, muvozanat va muskullar tonusini tartibga soladi.</p>
+<h3>Tuzilishi</h3>
+<ul><li><strong>Vermis</strong> — markaziy qism, tananing muvozanati</li><li><strong>Neocerebellum (hemisferalar)</strong> — qo'l-oyoq koordinatsiyasi</li><li><strong>Flocculonodular lob</strong> — vestibular muvozanat</li></ul>
+<h3>Miyacha yadrolari</h3>
+<ul><li>Nucl. dentatus (eng katta) → harakat koordinatsiyasi</li><li>Nucl. emboliformis va globosus → spinocerebellum</li><li>Nucl. fastigii → vestibulocerebellum</li></ul>
+<h3>Miyacha ataksiyasi belgilari</h3>
+<ul><li><strong>Dismetriya</strong> — nishonga to'g'ri bora olmaslik (burun-barmoq sinovi)</li><li><strong>Adiadоxokineziya</strong> — tez-tez harakatlarni bajara olmaslik</li><li><strong>Intentional tremor</strong> — harakatda paydo bo'ladi</li><li><strong>Nystagmus</strong> — ko'z titrashi</li><li><strong>Skandlangan nutq</strong> — bo'g'inlab gapirish</li><li><strong>Romberg sinovi</strong> — ko'zni yumganda og'adi</li></ul>`,
+    21:`<h3>Ekstrapiramidal sistema</h3>
+<p>Ekstrapiramidal sistema ixtiyorsiz harakatlar va muskullar tonusini tartibga soladi.</p>
+<h3>Asosiy tuzilmalar</h3>
+<ul><li><strong>Striatum</strong>: Caudate nucleus + putamen</li><li><strong>Globus pallidus</strong>: Ichki va tashqi</li><li><strong>Substantia nigra</strong>: Dopaminergik neyronlar</li><li><strong>Subthalamic nucleus</strong></li></ul>
+<h3>Parkinson kasalligi</h3>
+<ul><li>Substantia nigra da dopaminergik neyronlar yo'qolishi</li><li><strong>TRAP</strong>: Tremor (tinchlikda, 4-6 Hz), Rigidnost (qo'rg'oshin quvur), Akineziya/bradykineziya, Postural beqarorlik</li><li><strong>Lewy tanachalari</strong> — α-synuclein to'planishi</li><li>Davolash: Levodopa/Carbidopa</li></ul>
+<h3>Boshqa ekstrapiramidal kasalliklar</h3>
+<ul><li><strong>Xoreya Gentington</strong> — ot dumining atrofiyasi, autosomal dominant</li><li><strong>Hemiballizm</strong> — subthalamic nucleus zararlanishi, bir tomonlama yirik harakatlar</li><li><strong>Tortikollis</strong> — bo'yin muskullarining distoniyasi</li></ul>`,
+    22:`<h3>Bosh miya katta yarimsharlari</h3>
+<h3>Korteks loблari va funksiyalari</h3>
+<ul><li><strong>Frontal lob</strong>: Ixtiyoriy harakat (presentral girus), nutq (Broca — chap), shaxsiyat, ijroiya funksiya</li><li><strong>Parietal lob</strong>: Sezgi (postsentral girus), fazoviy orientatsiya, praksiya</li><li><strong>Temporal lob</strong>: Eshitish, nutqni tushunish (Wernicke — chap), xotira</li><li><strong>Oksipital lob</strong>: Ko'rish (V1, V2, V3)</li></ul>
+<h3>Nutq markazlari</h3>
+<ul><li><strong>Broca afaziyasi</strong>: Nutq ishlab chiqish buzilishi, tushunish yaxshi, ekspressiv afaziya</li><li><strong>Wernicke afaziyasi</strong>: Nutqni tushunish buzilishi, fluent lekin ma'nosiz nutq</li><li><strong>Global afaziya</strong>: Ikkalasi ham buzilgan</li></ul>
+<h3>Miya qon ta'minoti</h3>
+<ul><li><strong>ACA</strong> (anterior cerebral a.) — frontal va parietal medial qism → oyoq falaji</li><li><strong>MCA</strong> (middle cerebral a.) — ko'pchilik korteks → qo'l falaji + afaziya</li><li><strong>PCA</strong> (posterior cerebral a.) — oksipital lob → gemianopsiya</li></ul>`,
+    23:`<h3>Periferik nerv sistemasi</h3>
+<ul><li>31 juft orqa miya nervi (8C+12T+5L+5S+1Co)</li><li>12 juft kranial nerv</li><li>Har bir orqa miya nervi: Old ildiz (motor) + Orqa ildiz (sezgi)</li></ul>
+<h3>Periferik neyropatiyalar</h3>
+<ul><li><strong>Mononeyropatiya</strong>: Bir nerv — travma, siqilish</li><li><strong>Polineyropatiya</strong>: Ko'p nervlar simmetrik — diabet, alkogol, B12 tanqisligi</li><li><strong>Mononeyropatiya multipleks</strong>: Ko'p alohida nervlar — vaskulit</li></ul>
+<h3>Avtonom nerv sistemasi</h3>
+<ul><li><strong>Simpatik</strong>: T1-L2 dan chiqadi, adrenergik, fight-or-flight</li><li><strong>Parasimpatik</strong>: Kraniosakral (III,VII,IX,X + S2-S4), xolinergik, rest-and-digest</li></ul>
+<h3>Simpatik va parasimpatik farqi</h3>
+<ul><li>Ko'z: Simpatik → midriaz; Parasimpatik → miosis</li><li>Yurak: Simpatik → taxikardiya; Parasimpatik → bradikardiya</li><li>O'pka: Simpatik → bronxodilatasiya; Parasimpatik → bronxokonstriktsiya</li></ul>
+<div class="highlight"><strong>Horner sindromi:</strong> Simpatik zanjir uzilishi → Ptoz + Miosis + Angidrozis.</div>`,
+  },
+  anki:{
+    1:[
+      {q:"Neyronning asosiy tuzilmalarini sanang",a:"Soma (hujayra tanasi), Dendritlar, Akson, Sinaps"},
+      {q:"Afferent neyron nima?",a:"Sezgi impulslarini periferiyadan markazga olib keladigan neyron"},
+      {q:"Efferent neyron nima?",a:"Buyruq impulslarini markazdan muskulga olib boradigan neyron"},
+      {q:"Unipolar neyronlarning misoli?",a:"Orqa miya ganglioni pseudounipolar neyronlari"},
+      {q:"Neyronlar bo'lina oladimi?",a:"Yo'q, mitoz yo'li bilan bo'linmaydi. Faqat aksonal regeneratsiya mumkin"},
+      {q:"Sinaps nima?",a:"Ikkita neyron o'rtasidagi ulanish joyi, neyrotransmitterlar yordamida signal o'tadi"},
+      {q:"Multipolar neyronlarga misol?",a:"Motor neyronlar (old shox), Purkinje hujayralari (miyacha)"},
+      {q:"Dendritning funksiyasi nima?",a:"Impulsni somaga olib keladi (afferent yo'nalish)"},
+    ],
+    2:[
+      {q:"Neyroglialar neyronlarga nisbatan qancha ko'p?",a:"10 marta ko'p"},
+      {q:"MNS da mielin hosil qiluvchi hujayra?",a:"Oligodendrotsitlar"},
+      {q:"PNS da mielin hosil qiluvchi hujayra?",a:"Shvann hujayralari"},
+      {q:"Mikroglianing asosiy funksiyasi?",a:"MNS ning immunologik himoyasi — fagotsitoz"},
+      {q:"Astrotsitlarning funksiyasi?",a:"Qon-miya to'sig'i, K+ ionlarini tartibga solish, neyronlarni qo'llash"},
+      {q:"Ependimal hujayralar qayerda joylashgan?",a:"Miya qorinchalarini qoplaydi, BOM hosil qiladi"},
+      {q:"Ranvier bo'g'imlari nima?",a:"Mielin qobig'idagi uzilish joylari — saltatory o'tkazuvchanlikni ta'minlaydi"},
+      {q:"Multiple skleroz qaysi hujayra zararlanishidan?",a:"Oligodendrotsitlar — MNS demielinizatsiyasi"},
+    ],
+    3:[
+      {q:"Orqa miya qayerdan qayergacha joylashgan?",a:"Foramen magnumdan L1-L2 vertebragacha"},
+      {q:"Orqa miyadan nechta juft nerv chiqadi?",a:"31 juft: 8C + 12T + 5L + 5S + 1Co"},
+      {q:"C3-C5 qaysi muhim strukturani innervatsiya qiladi?",a:"Diafragma (n. phrenicus)"},
+      {q:"Brachial plexus qaysi segmentlardan?",a:"C5-C8, Th1"},
+      {q:"Lumbosakral pleksus qaysi segmentlardan?",a:"L2-S2"},
+      {q:"Siydik pufagi va to'g'ri ichak qaysi segmentlar?",a:"S2-S4"},
+      {q:"Dermatom nima?",a:"Bir spinal segment innervatsiya qiladigan teri soхasi"},
+    ],
+    4:[
+      {q:"Spinothalamicus lateralis nima o'tkazadi?",a:"Og'riq va harorat sezgisini"},
+      {q:"Fasciculus gracilis va cuneatus nima o'tkazadi?",a:"Vibrasiya, propriotseptsiya, diskriminatsiya (lemniscal yo'l)"},
+      {q:"Corticospinalis trakti qayerda chatishadi?",a:"Medullada (piramidal chatishtirish)"},
+      {q:"Spinothalamicus qayerda chatishadi?",a:"Orqa miyada (old kommissura orqali)"},
+      {q:"Brown-Séquard sindromi nima?",a:"Orqa miya yarmining zararlanishi: ipsilateral harakat + kontralateral og'riq yo'qolishi"},
+      {q:"Piramidal kanal orqa miyaning qaysi kanalida?",a:"Lateral funiculus (yon kanat)"},
+      {q:"Spinocerebellaris trakti nima olib boradi?",a:"Muskul-pay propriotseptsiyasini miyachaga"},
+    ],
+    5:[
+      {q:"Rexed plastinkalari I-II nima uchun?",a:"Og'riq va harorat (substantia gelatinosa)"},
+      {q:"Old shoxda qaysi motor neyronlar bor?",a:"Alpha motor neyronlar, Gamma motor neyronlar, Renshaw hujayralari"},
+      {q:"Yon shoxda nima joylashgan?",a:"Avtonomik (simpatik) neyronlar — C8-L2 segmentlari"},
+      {q:"Alpha motor neyronning funksiyasi?",a:"Muskul tolalarini innervatsiya qiladi (harakat)"},
+      {q:"Gamma motor neyronning funksiyasi?",a:"Muskul dukchalarini innervatsiya qiladi (tonus)"},
+      {q:"Renshaw hujayrasi qanday ishlaydi?",a:"Tormozlovchi interneyron — motor neyronni o'zi tormozlaydi (feedback)"},
+    ],
+    6:[
+      {q:"Sezgi yo'li necha neyrondan iborat?",a:"3 neyron: Ganglion → Yadrо → Thalamus → Korteks"},
+      {q:"Og'riq va harorat sezgisi qaysi yo'l orqali?",a:"Tractus spinothalamicus lateralis"},
+      {q:"Vibrasiya va propriotseptsiya qaysi yo'l orqali?",a:"Fasciculus gracilis/cuneatus (orqa kanat, lemniscal yo'l)"},
+      {q:"Lemniscal yo'l qayerda chatishadi?",a:"Medullada (nucleus gracilis/cuneatus dan keyin)"},
+      {q:"Spinothalamicus qayerda chatishadi?",a:"Orqa miyada, old kommissura orqali, 1-2 segment yuqorida"},
+      {q:"Stereognoziya nima?",a:"Ko'zmaydi ko'rmasdan predmetni tanish — parietal korteks funksiyasi"},
+    ],
+    7:[
+      {q:"Vibrasiyani tekshirish uchun nima ishlatiladi?",a:"128 Hz kamerton"},
+      {q:"Anesteziya nima?",a:"Sezgining to'liq yo'qolishi"},
+      {q:"Paresteziya nima?",a:"O'z-o'zidan paydo bo'ladigan nojo'ya sezgi (qimirlash, achishish)"},
+      {q:"Allodinia nima?",a:"Og'riqsiz ta'sirdan og'riq paydo bo'lishi"},
+      {q:"O'tkazuvchanlik tipi sezgi buzilishi nima?",a:"Orqa miya zararlangan joydan pastda sezgi buzilishi"},
+      {q:"Periferik tip sezgi buzilishi nima?",a:"Dermatom yoki nerv innervatsiyasi bo'yicha buzilish"},
+    ],
+    8:[
+      {q:"MHN zararlanishida reflelkslar qanday bo'ladi?",a:"Kuchayadi (giperrefleksiya), klonus paydo bo'ladi"},
+      {q:"PHN zararlanishida muskul tonusi qanday?",a:"Pasayadi — flaccid falaj"},
+      {q:"Babinski refleksi nima anglatadi?",a:"MHN (markaziy motor neyron) zararlanishini"},
+      {q:"Corticobulbaris trakti qayerga boradi?",a:"Kranial nervlar yadrolariga (motor)"},
+      {q:"PHN zararlanishida atrofiya bormi?",a:"Ha, muskul atrofiyasi va fassikulatsiya bo'ladi"},
+      {q:"Presentral girus nima?",a:"Birlamchi motor korteks — MHN boshlanadi"},
+    ],
+    9:[
+      {q:"MRC shkalaida 0 ball nima?",a:"Hech qanday harakat yo'q"},
+      {q:"MRC shkalaida 3 ball nima?",a:"Gravitatsiyaga qarshi harakat bor, lekin qarshilikka yo'q"},
+      {q:"Tizza refleksining yoyi (C)?",a:"L3-L4"},
+      {q:"Achilles refleksining yoyi?",a:"S1-S2"},
+      {q:"Biceps refleksining yoyi?",a:"C5-C6"},
+      {q:"Hemiplegia nima?",a:"Bir tomonlama (ipsilateral) qo'l va oyoq falaji"},
+      {q:"Paraplegia nima?",a:"Ikki oyoq falaji (ko'pincha torakal orqa miya)"},
+      {q:"Burun-barmoq sinovi nima tekshiradi?",a:"Ko'z va qo'l koordinatsiyasini — miyacha funksiyasi"},
+    ],
+    10:[
+      {q:"XII-juft nerv qaysi muskullarni innervatsiya qiladi?",a:"Til muskullari (genioglossus va boshqalar)"},
+      {q:"Periferik XII-juft zararlanishida til qaysi tomonga og'adi?",a:"Zararlangan tomonga og'adi"},
+      {q:"XII-juft nerv qaysi kanal orqali chiqadi?",a:"Canalis hypoglossi (occipital suyak)"},
+      {q:"XII-juft markaziy zararlanishida simptom qanday?",a:"Kontralateral til parezisi, atrofiya yo'q"},
+      {q:"XII-juft periferik zararlanishida fassikulatsiya bormi?",a:"Ha, til fassikulatsiyasi bo'ladi"},
+    ],
+    11:[
+      {q:"XI-juft nerv qaysi muskullarni innervatsiya qiladi?",a:"M. sternocleidomastoideus va m. trapezius"},
+      {q:"XI-juft tekshirish: boshni burish?",a:"SCM tekshiriladi — qarama-qarshi tomonga qarshilik bilan burish"},
+      {q:"XI-juft tekshirish: yelkani ko'tarish?",a:"Trapezius tekshiriladi — bir xil tomon (ipsilateral)"},
+      {q:"XI-juft zararlanishida qanday ko'rinish?",a:"Yelka ptozi, boshni o'girib bo'lmaydi, scapula \'qanotli\'"},
+      {q:"XI-juft qaysi teshik orqali chiqadi?",a:"Foramen jugulare"},
+    ],
+    12:[
+      {q:"X-juft (Vagus) qaysi organ tizimlarini innervatsiya qiladi?",a:"Halqum, qizilo'ngach, yurak, o'pka, oshqozon va ichaklarning yuqori qismi"},
+      {q:"Uvula zararlanishida qaysi tomonga og'adi?",a:"Sog'lom tomonga (zararlangan tomon qarama-qarshisiga)"},
+      {q:"Disfagiya nima?",a:"Yutish qiyinligi"},
+      {q:"Bulbar falaj nima?",a:"IX, X, XI, XII nervlar ikki tomonlama zararlanishi"},
+      {q:"Vagusning parasimpatik yadroси?",a:"Nucleus dorsalis n. vagi"},
+    ],
+    13:[
+      {q:"IX-juft nerv til qaysi qismini innervatsiya qiladi?",a:"Til orqa 1/3 qismi (ta'm sezgisi)"},
+      {q:"Gag refleksining afferent qismi qaysi nerv?",a:"IX-juft (glossopharyngeal)"},
+      {q:"IX-juft qaysi bezni innervatsiya qiladi?",a:"Parotid bez (sekretor — nucleus salivatorius inferior)"},
+      {q:"Glossofaringeal neyralg'iya qayerda og'riq beradi?",a:"Halqum va quloq atrofida elektr kabi og'riq"},
+    ],
+    14:[
+      {q:"VIII-juft nervning ikki qismi?",a:"Cochlear (eshitish) va Vestibular (muvozanat)"},
+      {q:"Rinne sinovi nima tekshiradi?",a:"Havo va suyak o'tkazuvchanligini — sensorineural vs konduksion karlik"},
+      {q:"BPPV nima?",a:"Benign Paroksizmal Pozitsion Vertigo — otolitlar o'rin almashishi"},
+      {q:"Sentral nistagm periferikdan qanday farq qiladi?",a:"Sentral: yo'nalishi o'zgaradi, suppressiya bo'lmaydi"},
+      {q:"Vestibular ataksiya va miyacha ataksiyasi farqi?",a:"Vestibular: ko'z yumilsa kuchayadi; Miyacha: ko'z ochiq ham bo'ladi"},
+    ],
+    15:[
+      {q:"VII-juft markaziy va periferik zararlanish farqi?",a:"Markaziy: faqat quyi yuz; Periferik: yuz barchasi (Bell's palsy)"},
+      {q:"Bell's palsy da lagoftalm nima?",a:"Ko'zni to'liq yuma olmaslik — periferik VII zararlanishi"},
+      {q:"VII-juft til qaysi qismining ta'miga javobgar?",a:"Til old 2/3 qismi (chorda tympani orqali)"},
+      {q:"Stylomastoid foramen qaysi nerv uchun?",a:"VII-juft facial nerv"},
+    ],
+    16:[
+      {q:"V-juft nervning 3 ta shoxи?",a:"V1-Oftalmik, V2-Maxillar, V3-Mandibular"},
+      {q:"Trigeminal neyralg'iya davolash?",a:"Karbamazepin (birinchi qator)"},
+      {q:"Korneal refleksning afferent qismi?",a:"V1 (oftalmik) — n. nasociliaris"},
+      {q:"Korneal refleksning efferent qismi?",a:"VII-juft (facial) — ko'z yumish"},
+      {q:"V3 qaysi teshikdan chiqadi?",a:"Foramen ovale"},
+    ],
+    17:[
+      {q:"'Down-and-out' ko'z qaysi nerv zararlanishi?",a:"III-juft (oculomotorius) to'liq zararlanishi"},
+      {q:"Ptoz qaysi nerv zararlanishida bo'ladi?",a:"III-juft — levator palpebrae superioris falaji"},
+      {q:"Zinapoyadan tushishda diplopia — qaysi nerv?",a:"IV-juft (trochlearis) — m. obliquus superior"},
+      {q:"Medial strabizm qaysi nerv zararlanishi?",a:"VI-juft (abducens) — m. rectus lateralis falaji"},
+      {q:"Anizokoria nima?",a:"Ikki ko'z qorachig'ining o'lchamlari farq qilishi"},
+    ],
+    18:[
+      {q:"Bitemporalʼ gemianopsiya nima sababdan?",a:"Chiasma opticum zararlanishi (ko'pincha gipofiz adenomasi)"},
+      {q:"Homonim gemianopsiya nima?",a:"Bir xil tomonlama ko'rish maydoni yo'qolishi — tractus/korteks zararlanishi"},
+      {q:"Ko'rish yo'lida nasal tolalar qayerda chatishadi?",a:"Chiasma opticum da"},
+      {q:"PCA (posterior cerebral artery) zararlanishi qanday ko'rish buzilishi?",a:"Kontralateral homonim gemianopsiya"},
+    ],
+    19:[
+      {q:"Anosmiya nima?",a:"Hid bilmaslik — I-juft (olfaktor) nerv zararlanishi"},
+      {q:"Papez doirasi tarkibi?",a:"Hippocampus → Fornix → Corpus mamillare → Thalamus → Cingulate → Hippocampus"},
+      {q:"Amigdalaning funksiyasi?",a:"Qo'rquv, tajovuzkorlik, emotsional reaksiya"},
+      {q:"Anterogradli amneziya nima?",a:"Yangi xotirani shakllantira olmaslik — hippocampus zararlanishi"},
+    ],
+    20:[
+      {q:"Miyacha ataksiyasining asosiy belgilari?",a:"Dismetriya, adiadoxokineziya, intentional tremor, skandlangan nutq, nistagm"},
+      {q:"Intentional tremor nima?",a:"Harakatni bajarish paytida paydo bo'ladigan titrash — miyacha"},
+      {q:"Adiadochokineziya nima?",a:"Tez-tez qarama-qarshi harakatlarni bajara olmaslik (pronatsiya/supinatsiya)"},
+      {q:"Miyachaning vermiси qaysi funksiya?",a:"Tana muvozanati va yurish koordinatsiyasi"},
+      {q:"Nistagmning miyacha turi?",a:"Horizontal, ko'rish yo'nalishiga bog'liq"},
+    ],
+    21:[
+      {q:"Parkinson kasalligida qaysi tuzilma zararlanadi?",a:"Substantia nigra — dopaminergik neyronlar"},
+      {q:"TRAP nima?",a:"Tremor + Rigidnost + Akineziya + Postural beqarorlik (Parkinson)"},
+      {q:"Parkinson tremori qanday?",a:"Tinchlikda, 4-6 Hz, 'pill-rolling' tremor"},
+      {q:"Lewy tanachalar nima?",a:"α-synuclein to'planishi — Parkinson va Lewy body dementsiyasi"},
+      {q:"Xoreya Gentington qanday irsiylanadi?",a:"Autosomal dominant, 4-xromosoma, CAG takrorlanishi"},
+      {q:"Hemiballizm sababi?",a:"Subthalamic nucleus zararlanishi"},
+    ],
+    22:[
+      {q:"Broca afaziyasi va Wernicke afaziyasi farqi?",a:"Broca: nutq chiqarish buzilishi; Wernicke: tushunish buzilishi"},
+      {q:"MCA (o'rta miya arteriyasi) zararlanishida qanday belgilar?",a:"Kontralateral hemiplegia (qo'l > oyoq) + afaziya (chap tomonda)"},
+      {q:"ACA zararlanishida qaysi qism falajlanadi?",a:"Kontralateral oyoq (medial korteks)"},
+      {q:"Korteks qaysi qismi til harakatini boshqaradi?",a:"Presentral girusning pastki qismi (chap yarimshar)"},
+      {q:"Frontal lobning ijroiya funksiyasi deganda nima?",a:"Rejalashtirish, qaror qabul qilish, inhibisiya"},
+    ],
+    23:[
+      {q:"Simpatik nerv sistemasi qaysi segmentlardan chiqadi?",a:"T1-L2 (torakolumbar)"},
+      {q:"Parasimpatik nerv sistemasi qayerdan chiqadi?",a:"Kraniosakral: III,VII,IX,X kranial nervlar + S2-S4"},
+      {q:"Horner sindromi belgilari?",a:"Ptoz + Miosis + Angidrozis — simpatik zanjir uzilishi"},
+      {q:"Diabet polineyropatiyasi qanday boshlanadi?",a:"Distal simmetrik, paypoqsimon buzilish, avval oyoqdan"},
+      {q:"Giyyen-Barre sindromi nima?",a:"PNS demielinizatsiyasi — ascendant falaj, arefleksiya"},
+    ],
+  },
+  keys:{
+    1:[
+      {t:"Motor neyron kasalligi",d:"q",s:"55 yoshli erkak bemor qo'l va oyoqlarida kuchsizlik, disfagiya va ovoz qo'porishidan shikoyat qilmoqda. Ko'rikda: qo'l muskullarida atrofiya, fassikulatsiya; reflekslar kuchaygan; Babinski (+); tilda fassikulatsiya bor.",q:"Bu bemorda MHN yoki PHN zararlanishi bormi, yoki ikkalasi ham? Qaysi kasallik deb o'ylaysiz?",a:"Ikkala — MHN (spastik belgilar: giperrefleksiya, Babinski) va PHN (atrofiya, fassikulatsiya) bir vaqtda zararlanishi ALS (Amyotrofik lateral skleroz) ni ko'rsatadi. Tilda fassikulatsiya XII-juft PHN zararlanishini tasdiqlaydi."},
+      {t:"Orqa miya jarohati",d:"o",s:"24 yoshli motosikl haydovchi avariyadan so'ng Th6 darajasida orqa miya jarohati olgan. Ko'rikda: bel va oyoqda falaj, harorat va og'riq sezgisi yo'q, vibrasiya va propriotseptsiya saqlanib qolgan.",q:"Orqa miyaning qaysi qismi zararlangan va bu qaysi sindrom?",a:"Anterior cord syndrome — orqa miyaning old qismi zararlangan. Corticospinalis (harakat) va spinothalamicus (og'riq, harorat) zararlangan, lekin orqa kanat (vibrasiya, propriotseptsiya) saqlanib qolgan."},
+    ],
+    2:[
+      {t:"MS kasalligi",d:"q",s:"28 yoshli ayolda 2 yil ichida qayta-qayta ko'rish buzilishi, oyoqlarda kuchsizlik va siydik tutmasligi epizodlari bo'lgan. MRI da oq moddada bir nechta demielinizatsiya o'choqlari ko'rinmoqda.",q:"Bu qanday kasallik va glial hujayralarning qaysi turi zararlangan?",a:"Multiple Skleroz — MNS da oligodendrotsitlar demielinizatsiyasi. Klassik belgilar: vaqt va makonda disseminatsiya, relaps-remitting kechimi. MRI da periventrikulyar oq modda o'choqlari."},
+      {t:"GBS",d:"o",s:"35 yoshli erkak 2 hafta oldin o'tgan ORVI dan keyin oyoqdan boshlab kuchsizlik boshlangan, 5 kun ichida ko'tarilgan va nafas olish qiyinlashgan.",q:"Bu qanday kasallik va qaysi glial hujayra zararlangan?",a:"Giyyen-Barre sindromi — PNS da Shvann hujayralari demielinizatsiyasi. Ascending falaj, arefleksiya, CSF da albuminositologik dissossiatsiya (oqsil ko'p, leykotsit kam). Nafas monioring shart."},
+    ],
+    3:[
+      {t:"Disk gryjasi",d:"o",s:"42 yoshli erkak bel og'rig'i va o'ng oyoqqa tarqaluvchi og'riqdan shikoyat qilmoqda. Ko'rikda: o'ng oyoqning tashqi tomonida gipesteziya, o'ng tizza refleksi pasaygan, oyoq ko'tarishda og'riq kuchayadi.",q:"Qaysi disk va qaysi ildiz siqilgan?",a:"L4 ildizi siqilishi (L3-L4 disk gryjasi). L4 dermatomi — son va tizzaning medial tomoni. L4 ildizi zararlanishida tizza refleksi (L3-L4) pasayadi. Lasègue sinovi (+) bo'ladi."},
+    ],
+    4:[
+      {t:"Brown-Séquard sindromi",d:"q",s:"19 yoshli erkak orqa miyaning o'ng tomoniga pichoq yaralanishi olgan. Ko'rikda: o'ng oyoqda: kuchsizlik, vibrasiya va propriotseptsiya yo'q; chap oyoqda: og'riq va harorat sezgisi yo'q.",q:"Bu qanday sindrom va nega simptomlar ikki tomonlama?",a:"Brown-Séquard sindromi. Ipsilateral (o'ng): harakat yo'qolishi (corticospinalis zararlandi) + vibrasiya/propriotseptsiya yo'qolishi (orqa kanat zararlandi). Kontralateral (chap): og'riq/harorat yo'qolishi (spinothalamicus oldin chatishgan)."},
+    ],
+    5:[
+      {t:"Siringomieliya",d:"q",s:"25 yoshli erkak qo'llarda og'riq va haroratni sezmaydigan bo'lib qolgan, lekin teginish, vibrasiya va kuchni saqlab qolgan. MRI da servikal orqa miyada gidromieliya ko'rinmoqda.",q:"Bu qanday buzilish va nega dissossiatsiya bo'lmoqda?",a:"Siringomieliya — markaziy kanal kengayishi old kommissurani bosadi. Bu spinothalamic tolalarni (og'riq, harorat — chatishish joyi) zararlaytdi, lekin orqa kanat tolalari (vibrasiya, propriotseptsiya) saqlanadi. Bu 'Cape' taqsilanishi."},
+    ],
+    6:[
+      {t:"Talamik og'riq sindromi",d:"o",s:"60 yoshli ayolda o'ng tomondagi insultdan 3 oy o'tib, chap qo'l va oyoqda kuchli yonuvchi og'riq boshlangan. Sezgi tekshiruvda giperesteziya va allodinia aniqlangan.",q:"Bu qanday sindrom va nega og'riq bor?",a:"Talamik og'riq sindromi (Dejerine-Roussy). VPL thalamus zararlanganda sezgi yo'lining markaziy sensitizatsiyasi ro'y beradi. Kontralateral yanuvchi og'riq, giperesteziya, allodinia. Davolash: Amitriptilin, Gabapentin."},
+    ],
+    7:[
+      {t:"Karpal tunel sindromi",d:"os",s:"45 yoshli ayol 3 oydan beri o'ng qo'lning 1-2-3 barmoqlarida uvishish va kechasi og'riqdan uyg'onib ketmoqda. Phalen sinovi (+), o'ng bilagida teginish sezgisi kamaygan.",q:"Bu qanday kasallik va qaysi nerv siqilgan?",a:"Karpal tunel sindromi — n. medianus siqilishi retinaculum flexorum ostida. Sezgi: 1-3 barmoq (palmar). Harakat: thenar atrofiya (kech). Elektromiyografiya tasdiqlaydi. Davolash: splint, kortikosteroid, kerak bo'lsa jarrohlik."},
+    ],
+    8:[
+      {t:"Piramidal sindrom",d:"o",s:"67 yoshli erkak tongda chap qo'l va oyoqda kuchsizlik bilan uyg'ongan. Ko'rikda: chap tomonlama spastik hemiplegia, Babinski (+), tizza refleksi kuchaygan, chap yuzida kuchsizlik yo'q.",q:"Zararlanish qayerda va nega yuz tutmagan?",a:"O'ng MCA hududida insult — o'ng presentral girus. Yuz saqlanishi: presentral girusning yuqori qismi zararlangan (oyoq va qo'l sоhasi), pastki qismi (yuz) esa ikki tomonlama innervatsiya bor. Shuning uchun markaziy zararlanishda yuz (quyi qism bundan mustasno) saqlanadi."},
+    ],
+    9:[
+      {t:"Yelka falaji",d:"os",s:"Yangi tug'ilgan chaqaloqda o'ng qo'l vertikal osilib turadi, rotatsiyasiz, medial rotatsiyada turadi. Erkin yig'lashda qo'l harakatsiz.",q:"Bu qanday falaj va qaysi nerv zararlanishi?",a:"Erb-Duchenne falaji — C5-C6 brachial pleksus zararlanishi. Tug'ruq paytidagi tortishish natijasida. Deltoid, biceps, brachioradialis falajligi. Qo'l 'telefon ishchisi pozitsiyasi'da turadi. Aksariyat spontan tiklanadi."},
+    ],
+    10:[
+      {t:"Bulbar falaj",d:"q",s:"70 yoshli erkakda yutish qiyinligi, ovoz qo'porishligi, tilda fassikulatsiya va atrofiya bor. Ko'rikda: palatin arkining harakati yo'q, gag refleksi yo'q.",q:"Bu bulbar yoki psevdobulbar falaj? Qaysi nervlar zararlangan?",a:"Bulbar falaj (periferik) — IX, X, XII juft kranial nervlarning PHN zararlanishi. Tilda fassikulatsiya va atrofiya PHN ni tasdiqlaydi. Psevdobulbar da esa MHN zararlanishi bo'lib, atrofiya yo'q, reflekslar kuchaygan, patologik kulgi-yig'i bor."},
+    ],
+    11:[
+      {t:"XI-juft falaj",d:"os",s:"22 yoshli erkak bo'yinda limfa tugunini olib tashlash operatsiyasidan so'ng o'ng yelkasini ko'tara olmayapti va boshini chapga bura olmayapti.",q:"Qaysi nerv zararlangan va nega bu simptomlar?",a:"N. accessorius (XI-juft) iatrogen zararlanishi. Trapezius falaji → yelkani ko'tara olmaslik + scapula 'qanotli'. SCM falaji → boshni qarama-qarshi tomonga (chapga) bura olmaslik. Servikal disseksiya yoki limfadenektomiyada risk yuqori."},
+    ],
+    12:[
+      {t:"Vagus zararlanishi",d:"o",s:"55 yoshli erkakda o'pka o'smasidan keyin ovoz qo'porishligi boshlangan. Ko'rikda: sol vocal cord paralichi, uvula o'ngga og'ib turadi.",q:"O'sma qayerda va nega aynan chap vocal cord zararlangan?",a:"Chap n. laryngeus recurrens siqilishi — o'pka o'smasi. Bu nerv aortani aylanib o'tadi (chap tomonda), shuning uchun mediastinal o'smalar chap karrент nervni qisadi. Uvula o'ngga og'ishi — chap vagus zararlanishi."},
+    ],
+    13:[
+      {t:"Glossofaringeal neyralg'iya",d:"o",s:"65 yoshli ayolda ovqat yutganda va gapirganда bir necha soniya davom etadigan o'tkir, bir tomonlama halqum og'rig'i. Og'riq quloqqa ham tarqaladi.",q:"Bu qanday kasallik va IX juftdan boshqa qaysi nerv ishtirok etadi?",a:"Glossofaringeal neyralg'iya — IX-juft titrashi. Trigger zona: halqum, tanglay. Og'riq quloqqa tarqaladi — Arnold nervi (X-juft aurikulyar shoxasi) orqali. Trigeminal neyralg'iyadan farqi: joylashuv. Davolash: Karbamazepin."},
+    ],
+    14:[
+      {t:"Akustik neyroma",d:"q",s:"40 yoshli ayolda bir tomonlama eshitish pasayishi, tinnitus va bosh aylanishi. MRI da o'ng ichki eshitish kanalida o'sma ko'rinmoqda.",q:"Bu qanday o'sma, qaysi nerv, va boshqa qaysi nervlarga ta'sir qilishi mumkin?",a:"Vestibular schwannoma (akustik neyroma) — VIII-juftning vestibular qismidan o'sadi. Kengayishi bilan VII-juft (facial) ni bosishi mumkin → yuz falaji. Keyinchalik V-juft (sezgi yo'qolishi) va miyachani bosishi mumkin. Neurofibromatoz 2 bilan bog'liq bo'lishi mumkin."},
+    ],
+    15:[
+      {t:"Bell's palsy",d:"os",s:"30 yoshli erkak tongda o'ng yuz falaji bilan uyg'ongan: yuz burishtirolmaydi, ko'zni yuma olmaydi, og'zi chapga tortilgan, ta'm sezgisi yo'qolgan.",q:"Bu markaziy yoki periferik zararlanish? Qanday davolash?",a:"Periferik zararlanish — Bell's palsy (VII-juft). Belgilar: yuzning barcha qismi (peshona ham) zararlangan + lagoftalm + ta'm buzilishi → periferik. Markaziy bo'lsa peshona saqlanardi. Davolash: Prednisolon 10 kun, lagoftalm uchun ko'z tomchisi, kerak bo'lsa antiviral."},
+    ],
+    16:[
+      {t:"Trigeminal neyralg'iya",d:"o",s:"68 yoshli ayol chap yuz o'ng tomonida nonushta paytida elektr urishi kabi, 1-2 soniya davom etadigan, ovqat chaynaganda kuchayadigan og'riqdan shikoyat qilmoqda.",q:"Bu qanday kasallik, qaysi shox, va trigger zona nima?",a:"Trigeminal neyralg'iya (tic douloureux) — V-juft, ko'pincha V2 (maxillar) yoki V3 (mandibular). Trigger: chaynash, suhbat, teginish. Elektromiyografiya emas, klinik tashxis. Davolash: Karbamazepin 1-qator. Sababi: ko'pincha tomir kompressiyasi (SCA)."},
+    ],
+    17:[
+      {t:"Okulomotor falaj",d:"q",s:"52 yoshli erkakda birdaniga o'ng ko'z qovoqi tushib qolgan, diplopia va o'ng ko'z tashqariga va pastga qarayapti, o'ng qorachiq kengaygan.",q:"Bu qanday zararlanish, qaysi etiologiyani birinchi o'ylaymiz?",a:"III-juft (oculomotorius) to'liq zararlanishi. Qorachiq tutilishi (mydriasis) — parasimpatik tolalar tashqari yuzada, kompressiya paytida birinchi zararlanadi. Birinchi navbatda posterior communicating artery anevrizmasi istisno qilinishi kerak (neyrovizualizatsiya shoshilinch)! Diabet neyropatiyasida qorachiq odatda saqlanadi."},
+    ],
+    18:[
+      {t:"Gipofiz adenomasi",d:"o",s:"35 yoshli ayolda galaktoreya, amenoreya va asta-sekin ko'rish buzilishi boshlangan. Ko'rikda: ikki tomonlama temporal ko'rish maydoni yo'qolishi.",q:"Bu qanday ko'rish buzilishi va sababi nima?",a:"Bitemporal gemianopsiya — chiasma opticum siqilishi. Chiasma da nasal tolalar chatishadi (temporal ko'rishni ta'minlaydi). O'sma bosishi bilan ikkala temporal maydon yo'qoladi. Galaktoreya va amenoreya → prolaktinoma (eng ko'p gipofiz adenomasi). Davolash: Bromokriptin yoki kabergolin."},
+    ],
+    19:[
+      {t:"Alzheimer kasalligi",d:"q",s:"72 yoshli ayolda 3 yildan beri progressiv xotira yo'qolishi. Avval yangi voqealarni eslay olmay qolgan, keyin tanishlarni ham tanimay boshlagan. Ko'rikda: orientatsiya buzilishi, so'z topishda qiyinchilik.",q:"Qaysi struktura birinchi zararlanadi va u qanday mexanizm bilan bog'liq?",a:"Alzheimer kasalligida birinchi hippocampus zararlandi — shuning uchun yangi xotira (anterogradli amneziya) birinchi buziladi. Patologiya: beta-amyloid plaklari va tau neyrofibrilllar. Entorhinal korteks → hippocampus → assosiativ korteks ketma-ketligida tarqaladi. MMSE pasaygan. KT/MRI: mediyal temporal atrofiya."},
+    ],
+    20:[
+      {t:"Miyacha o'smasi",d:"o",s:"8 yoshli bola 2 oydan beri bosh og'rig'i (tongda kuchayadi), qayt qilish va yurish buzilishidan aziyat chekmoqda. Ko'rikda: bilateral papilledema, truncal ataksiya, nistagm.",q:"Bu qanday klinik holat, qaysi o'smani o'ylaysiz?",a:"Gidrosefaliк sindrom + miyacha ataksiyasi. Bolada IV-qorincha blokadasi → gidrosefaliк KIB oshishi. Vermis ataksiyasi (truncal). Eng ko'p sabab: Medulloblastoma (IV-qorincha rayoni, bolalarda). Shoshilinch neyrovizualizatsiya + neyrojarrohlik."},
+    ],
+    21:[
+      {t:"Parkinson kasalligi",d:"o",s:"65 yoshli erkak 2 yildan beri qo'l titramasi, harakatlar sekinlashishi va yurish o'zgarishidan shikoyat. Ko'rikda: dam olganda titrash, 'qo'rg'oshin quvur' rigidligi, mikrografiya, festinating gait.",q:"TRAP kriteriyalari bu bemorga to'g'ri keladimi va birinchi davolash qanday?",a:"Ha — Tremor (tinchlikda, 4-6 Hz), Rigidnost (plastic), Akineziya/bradikineziya (harakatlar sekinlashishi, mikrografiya), Postural beqarorlik bor. Birinchi davolash: Levodopa/Carbidopa. Yoshroq bemorlarda (< 60 yosh): DA agonist (Pramipeksol). Mao-B inhibitori qo'shilishi mumkin."},
+    ],
+    22:[
+      {t:"MCA insult",d:"q",s:"58 yoshli erkak to'satdan chap qo'l va oyoqda kuchsizlik, nutq buzilishi bilan keldi. Ko'rikda: chap gemiplegia (qo'l > oyoq), chalingan nutq (gapira olmaydi, tushunyapti). CT da o'ng MCA hududida gipodens o'choq.",q:"Bu qanday afaziya va nega qo'l > oyoq falajlangan?",a:"Broca afaziyasi — ekspressiv, frontal. MCA o'rta qismi zararlanishi. Somatotopik tashkil: MCA presentral girusning lateral (qo'l, yuz) qismini ta'minlaydi; ACA — medial (oyoq). Shuning uchun MCA insultda qo'l > oyoq. O'ng MCA → chap hemiplegia + Broca (chap dominant)."},
+    ],
+    23:[
+      {t:"Diabet neyropatiyasi",d:"o",s:"55 yoshli diabet kasali 10 yillik gistoriyasi bo'lgan bemor oyoq panjalarida uvishish, kechasi og'riq va yurish buzilishidan shikoyat qilmoqda. Ko'rikda: paypoqsimon gipesteziya, achilles refleksi yo'q.",q:"Bu qanday neyropatiya turi va asosiy patofizologiya nima?",a:"Distal simmetrik sensorimotor polineyropatiya — diabet neyropatiyasining eng keng tarqalgan turi. Paypoqsimon taqsilanish (eng uzun tolalar birinchi). Patofizologiya: sorbitol to'planishi, oksidativ stress, AGE mahsulotlar. Davolash: Glikemiyani nazorat qilish, og'riq uchun Gabapentin/Pregabalin/Duloksetin."},
+    ],
+  }
+};
+
+// ===================== STATE =====================
+const st={
+  done: JSON.parse(localStorage.getItem('n_done')||'[]'),
+  studied: parseInt(localStorage.getItem('n_studied')||'0'),
+  curTopic: null,
+  gAnki: [],
+  gAnkiIdx: 0,
+  gFlipped: false,
+};
+function save(){
+  localStorage.setItem('n_done',JSON.stringify(st.done));
+  localStorage.setItem('n_studied',st.studied);
+}
+
+// ===================== UI =====================
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  const map={home:0,topics:1,anki:2,keys:3,progress:4,detail:1};
+  const tabs=document.querySelectorAll('.nav-tab');
+  if(map[id]!=null) tabs[map[id]]?.classList.add('active');
+  if(id==='topics') renderTopics();
+  if(id==='progress') renderProgress();
+  updateBadge();
+}
+function updateBadge(){
+  document.getElementById('badge').textContent=`${st.done.length} / 23`;
+}
+function renderTopics(){
+  const g=document.getElementById('topicsGrid');
+  const mNames=['','1-OY','2-OY','3-OY'];
+  let html='', curM=0;
+  TOPICS.forEach(t=>{
+    if(t.m!==curM){curM=t.m;html+=`<div class="month-sep">${mNames[curM]}</div>`;}
+    const done=st.done.includes(t.id);
+    html+=`<div class="topic-card ${done?'done':''}" onclick="openTopic(${t.id})">
+      <div class="topic-num">MAVZU ${t.id}</div>
+      <div class="topic-name">${t.name}</div>
+      <div class="topic-meta">
+        <span class="tag tag-k">Konspekt</span>
+        <span class="tag tag-a">Anki</span>
+        <span class="tag tag-ky">Keyslar</span>
+      </div>
+    </div>`;
+  });
+  g.innerHTML=html;
+}
+function openTopic(id){
+  st.curTopic=TOPICS.find(t=>t.id===id);
+  document.getElementById('detailTitle').textContent=`Mavzu ${id}: ${st.curTopic.name}`;
+  const db=document.getElementById('doneBtn');
+  if(st.done.includes(id)) db.classList.add('done-check'); else db.classList.remove('done-check');
+  show('detail');
+  showTab('k');
+}
+function showTab(tab){
+  ['k','a','ky'].forEach(t=>{
+    const el=document.getElementById('tab-'+t);
+    if(el) el.style.display=t===tab?'block':'none';
+  });
+  if(tab==='k') renderKonspekt();
+  if(tab==='a') renderTopicAnki();
+  if(tab==='ky') renderTopicKeys();
+}
+function markDone(){
+  const id=st.curTopic.id;
+  if(!st.done.includes(id)) st.done.push(id);
+  save(); updateBadge();
+  const db=document.getElementById('doneBtn');
+  db.classList.add('done-check');
+  renderTopics();
+}
+function renderKonspekt(){
+  const k=document.getElementById('tab-k');
+  const html=DATA.konspekt[st.curTopic.id]||'<p>Konspekt tayyorlanmoqda...</p>';
+  k.innerHTML=`<div class="konspekt-box">${html}</div>`;
+}
+function renderTopicAnki(){
+  const cards=DATA.anki[st.curTopic.id]||[];
+  const box=document.getElementById('tab-a');
+  if(!cards.length){box.innerHTML='<p style="color:var(--muted)">Kartochkalar yo\'q</p>';return;}
+  renderAnkiCards(box,cards,'ta');
+}
+function renderTopicKeys(){
+  const cases=DATA.keys[st.curTopic.id]||[];
+  const box=document.getElementById('tab-ky');
+  if(!cases.length){box.innerHTML='<p style="color:var(--muted)">Keyslar yo\'q</p>';return;}
+  box.innerHTML=cases.map((c,i)=>keysHtml(c,`tk${i}`)).join('');
+}
+
+// ===== ANKI ENGINE =====
+let ankiState={cards:[],idx:0,flipped:false,prefix:''};
+function renderAnkiCards(container,cards,prefix){
+  ankiState={cards,idx:0,flipped:false,prefix};
+  drawCard(container,prefix);
+}
+function drawCard(container,prefix){
+  const {cards,idx,flipped}=ankiState;
+  if(!cards.length) return;
+  const c=cards[idx];
+  container.innerHTML=`
+    <div class="card-counter">${idx+1} / ${cards.length} kartochka</div>
+    <div class="flashcard ${flipped?'flipped':''}" onclick="flipAnki('${prefix}')">
+      <div class="flashcard-inner">
+        <div class="card-face front">
+          <div class="card-label">❓ SAVOL</div>
+          <div class="card-q">${c.q}</div>
+          <div class="card-hint">Javobni ko'rish uchun bosing</div>
+        </div>
+        <div class="card-face back">
+          <div class="card-label">✅ JAVOB</div>
+          <div class="card-a">${c.a}</div>
+        </div>
+      </div>
+    </div>
+    ${flipped?`<div class="rating-row">
+      <button class="anki-btn btn-red" onclick="nextAnki(false,'${prefix}')">😕 Bilmadim</button>
+      <button class="anki-btn btn-orange" onclick="nextAnki(true,'${prefix}')">🤔 Qiyin</button>
+      <button class="anki-btn btn-green" onclick="nextAnki(true,'${prefix}')">✅ Bildim!</button>
+    </div>`:''}
+  `;
+}
+function flipAnki(p){
+  ankiState.flipped=!ankiState.flipped;
+  const box=getBox(p);
+  drawCard(box,p);
+}
+function nextAnki(knew,p){
+  if(knew){st.studied++;save();}
+  ankiState.idx++;
+  ankiState.flipped=false;
+  const box=getBox(p);
+  if(ankiState.idx>=ankiState.cards.length){
+    box.innerHTML=`<div class="finish-box">
+      <div style="font-size:2.5rem;margin-bottom:1rem">🎉</div>
+      <div style="font-size:1.1rem;font-weight:700">Barcha kartochkalar tugatildi!</div>
+      <div style="color:var(--muted);margin:0.5rem 0 1.5rem">Ajoyib ish!</div>
+      <button class="anki-btn btn-blue" onclick="ankiState.idx=0;ankiState.flipped=false;drawCard(getBox('${p}'),'${p}')">Qaytadan boshlash</button>
+    </div>`;
+    return;
+  }
+  drawCard(box,p);
+}
+function getBox(p){
+  if(p==='ta') return document.getElementById('tab-a');
+  if(p==='ga') return document.getElementById('ankiArea');
+  return document.getElementById('tab-a');
+}
+
+function startGlobalAnki(){
+  const sel=document.getElementById('ankiSel').value;
+  let cards=[];
+  if(sel){
+    const id=parseInt(sel);
+    cards=DATA.anki[id]||[];
+  } else {
+    TOPICS.forEach(t=>{(DATA.anki[t.id]||[]).forEach(c=>cards.push(c));});
+    // shuffle
+    for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}
+  }
+  if(!cards.length){document.getElementById('ankiArea').innerHTML='<p style="color:var(--muted)">Kartochkalar topilmadi</p>';return;}
+  renderAnkiCards(document.getElementById('ankiArea'),cards,'ga');
+}
+
+// ===== KEYS ENGINE =====
+function keysHtml(c,uid){
+  const badge=c.d==='q'?'q':c.d==='o'?'o':'os';
+  const bLabel=c.d==='q'?'QIYIN':c.d==='o'?'O\'RTA':'OSON';
+  return `<div class="keys-card">
+    <span class="keys-badge badge-${badge}">${bLabel}</span>
+    <div class="keys-title">${c.t}</div>
+    <div class="keys-scenario">${c.s}</div>
+    <div class="keys-question">❓ ${c.q}</div>
+    <button class="reveal-btn" onclick="toggleKey('${uid}',this)">Javobni ko'rish →</button>
+    <div class="keys-answer" id="ka-${uid}">✅ ${c.a}</div>
+  </div>`;
+}
+function toggleKey(uid,btn){
+  const el=document.getElementById('ka-'+uid);
+  el.classList.toggle('show');
+  btn.textContent=el.classList.contains('show')?'Javobni yopish ←':'Javobni ko\'rish →';
+}
+function showGlobalKeys(){
+  const sel=document.getElementById('keysSel').value;
+  const box=document.getElementById('keysArea');
+  let cases=[];
+  if(sel){
+    const id=parseInt(sel);
+    cases=DATA.keys[id]||[];
+  } else {
+    TOPICS.forEach(t=>{(DATA.keys[t.id]||[]).forEach(c=>cases.push(c));});
+  }
+  if(!cases.length){box.innerHTML='<p style="color:var(--muted)">Keyslar topilmadi</p>';return;}
+  box.innerHTML=cases.map((c,i)=>keysHtml(c,`gk${i}`)).join('');
+}
+
+// ===== PROGRESS =====
+function renderProgress(){
+  const bars=document.getElementById('progressBars');
+  bars.innerHTML=TOPICS.map(t=>{
+    const pct=st.done.includes(t.id)?100:0;
+    return `<div class="progress-row">
+      <div class="progress-label" title="${t.name}">${t.id}. ${t.name}</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="progress-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+  document.getElementById('doneCount').textContent=st.done.length;
+  document.getElementById('studiedCount').textContent=st.studied;
+  document.getElementById('pctCount').textContent=Math.round(st.done.length/23*100)+'%';
+}
+
+// ===== SELECTS =====
+function populateSelects(){
+  ['ankiSel','keysSel'].forEach(id=>{
+    const sel=document.getElementById(id);
+    TOPICS.forEach(t=>{
+      const o=document.createElement('option');
+      o.value=t.id; o.textContent=`${t.id}. ${t.name.substring(0,42)}`;
+      sel.appendChild(o);
+    });
+  });
+}
+populateSelects();
+updateBadge();
+</script>
+</body>
+</html>
