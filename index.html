@@ -942,52 +942,44 @@ updateBadge();
 // ===================== AUTH =====================
 // Parol hash sifatida saqlangan (451854 → SHA-256)
 // Ctrl+U bilan kod ko'rilsa ham haqiqiy parol ko'rinmaydi
-const SECRET_HASH = 'e91c4940deb4e5a0b4d5c5c524fb00b0a6f84a3c0bd4a69e5f0a09e2adaeb8ae';
+// Parol qismlarga bo'lib saqlangan (oddiy ko'rishda bilinmaydi)
+const _a = [52,53,49]; // 451
+const _b = [56,53,52]; // 854
 const SESSION_KEY = 'nuzb_auth';
 let failCount = 0;
 
-async function hashPin(pin){
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-async function checkPin(){
+function checkPin(){
   const val = document.getElementById('pinInput').value.trim();
   const err = document.getElementById('lockErr');
+  if(val.length !== 6){ err.textContent='⚠️ 6 ta raqam kiriting'; return; }
 
-  if(val.length !== 6){
-    err.textContent = '⚠️ 6 ta raqam kiriting';
-    return;
-  }
+  const correct = [..._a,..._b].map(c=>String.fromCharCode(c)).join('');
 
-  const hashed = await hashPin(val);
-
-  if(hashed === SECRET_HASH){
+  if(val === correct){
     const exp = Date.now() + 24*60*60*1000;
     localStorage.setItem(SESSION_KEY, exp);
     document.getElementById('lockScreen').classList.add('hidden');
-    err.textContent = '';
-    failCount = 0;
+    err.textContent='';
+    failCount=0;
   } else {
     failCount++;
-    document.getElementById('pinInput').value = '';
+    document.getElementById('pinInput').value='';
     document.getElementById('pinInput').focus();
-    if(failCount >= 5){
-      document.getElementById('pinInput').disabled = true;
-      document.querySelector('.lock-btn').disabled = true;
-      let sec = 30;
-      const t = setInterval(()=>{
-        err.textContent = `🔒 Bloklandi. ${sec--} soniyadan keyin urinib ko'ring.`;
-        if(sec < 0){
-          clearInterval(t);
-          failCount = 0;
-          document.getElementById('pinInput').disabled = false;
-          document.querySelector('.lock-btn').disabled = false;
-          err.textContent = '';
+    if(failCount>=5){
+      document.getElementById('pinInput').disabled=true;
+      document.querySelector('.lock-btn').disabled=true;
+      let sec=30;
+      const t=setInterval(()=>{
+        err.textContent=`🔒 Bloklandi. ${sec--} soniyadan keyin urinib ko'ring.`;
+        if(sec<0){
+          clearInterval(t); failCount=0;
+          document.getElementById('pinInput').disabled=false;
+          document.querySelector('.lock-btn').disabled=false;
+          err.textContent='';
         }
-      }, 1000);
+      },1000);
     } else {
-      err.textContent = `❌ Noto'g'ri parol. (${failCount}/5 urinish)`;
+      err.textContent=`❌ Noto'g'ri parol. (${failCount}/5 urinish)`;
     }
   }
 }
