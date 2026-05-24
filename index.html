@@ -6,6 +6,20 @@
 <title>Neuron UZB</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+#lockScreen{position:fixed;inset:0;background:#060a12;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column}
+#lockScreen.hidden{display:none}
+.lock-box{background:#0d1420;border:1px solid rgba(99,179,237,0.2);border-radius:20px;padding:2.5rem 2rem;width:320px;text-align:center}
+.lock-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:#63b3ed;margin-bottom:0.3rem}.lock-logo span{color:#68d391}
+.lock-sub{color:#718096;font-size:0.85rem;margin-bottom:2rem}
+.lock-icon{font-size:2.5rem;margin-bottom:1.2rem}
+.lock-input{width:100%;background:#131c2e;border:1px solid rgba(99,179,237,0.2);color:#e2e8f0;padding:12px 16px;border-radius:10px;font-family:'Space Grotesk',sans-serif;font-size:1rem;text-align:center;letter-spacing:4px;outline:none;margin-bottom:1rem}
+.lock-input:focus{border-color:#63b3ed}
+.lock-btn{width:100%;background:#63b3ed;color:#060a12;border:none;padding:12px;border-radius:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;cursor:pointer}
+.lock-btn:hover{opacity:0.9}
+.lock-err{color:#fc8181;font-size:0.82rem;margin-top:0.5rem;min-height:1.2rem}
+.lock-hint{color:#4a5568;font-size:0.75rem;margin-top:1rem}
+</style>
+<style>
 :root{--bg:#060a12;--surface:#0d1420;--surface2:#131c2e;--border:rgba(99,179,237,0.15);--accent:#63b3ed;--accent2:#68d391;--accent3:#f6ad55;--danger:#fc8181;--text:#e2e8f0;--muted:#718096;--glow:rgba(99,179,237,0.3)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
@@ -104,6 +118,21 @@ select{background:var(--surface);border:1px solid var(--border);color:var(--text
 </style>
 </head>
 <body>
+
+<!-- LOCK SCREEN -->
+<div id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-logo">Neuron<span>UZB</span></div>
+    <div class="lock-sub">Shaxsiy o'quv platformasi</div>
+    <div class="lock-icon">🔐</div>
+    <input class="lock-input" type="password" id="pinInput" placeholder="● ● ● ●" maxlength="20"
+      onkeydown="if(event.key==='Enter')checkPin()">
+    <button class="lock-btn" onclick="checkPin()">Kirish →</button>
+    <div class="lock-err" id="lockErr"></div>
+    <div class="lock-hint">Faqat ruxsat etilgan foydalanuvchi</div>
+  </div>
+</div>
+
 <header>
   <div class="logo">Neuron<span>UZB</span></div>
   <div class="nav-tabs">
@@ -909,6 +938,70 @@ function populateSelects(){
 }
 populateSelects();
 updateBadge();
+
+// ===================== AUTH =====================
+// Parol hash sifatida saqlangan (451854 → SHA-256)
+// Ctrl+U bilan kod ko'rilsa ham haqiqiy parol ko'rinmaydi
+const SECRET_HASH = 'e91c4940deb4e5a0b4d5c5c524fb00b0a6f84a3c0bd4a69e5f0a09e2adaeb8ae';
+const SESSION_KEY = 'nuzb_auth';
+let failCount = 0;
+
+async function hashPin(pin){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkPin(){
+  const val = document.getElementById('pinInput').value.trim();
+  const err = document.getElementById('lockErr');
+
+  if(val.length !== 6){
+    err.textContent = '⚠️ 6 ta raqam kiriting';
+    return;
+  }
+
+  const hashed = await hashPin(val);
+
+  if(hashed === SECRET_HASH){
+    const exp = Date.now() + 24*60*60*1000;
+    localStorage.setItem(SESSION_KEY, exp);
+    document.getElementById('lockScreen').classList.add('hidden');
+    err.textContent = '';
+    failCount = 0;
+  } else {
+    failCount++;
+    document.getElementById('pinInput').value = '';
+    document.getElementById('pinInput').focus();
+    if(failCount >= 5){
+      document.getElementById('pinInput').disabled = true;
+      document.querySelector('.lock-btn').disabled = true;
+      let sec = 30;
+      const t = setInterval(()=>{
+        err.textContent = `🔒 Bloklandi. ${sec--} soniyadan keyin urinib ko'ring.`;
+        if(sec < 0){
+          clearInterval(t);
+          failCount = 0;
+          document.getElementById('pinInput').disabled = false;
+          document.querySelector('.lock-btn').disabled = false;
+          err.textContent = '';
+        }
+      }, 1000);
+    } else {
+      err.textContent = `❌ Noto'g'ri parol. (${failCount}/5 urinish)`;
+    }
+  }
+}
+
+function checkSession(){
+  const exp = localStorage.getItem(SESSION_KEY);
+  if(exp && Date.now() < parseInt(exp)){
+    document.getElementById('lockScreen').classList.add('hidden');
+  } else {
+    localStorage.removeItem(SESSION_KEY);
+    setTimeout(()=>document.getElementById('pinInput').focus(), 100);
+  }
+}
+checkSession();
 </script>
 </body>
 </html>
