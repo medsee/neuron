@@ -3,201 +3,233 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#060a12">
-<link rel="manifest" id="manifestLink">
 <title>NeuronUZB</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#060a12;--surface:#0d1420;--surface2:#131c2e;--border:rgba(99,179,237,0.15);--accent:#63b3ed;--accent2:#68d391;--accent3:#f6ad55;--danger:#fc8181;--text:#e2e8f0;--muted:#718096}
+:root{--bg:#060a12;--surface:#0d1420;--surface2:#131c2e;--border:rgba(99,179,237,0.15);--accent:#63b3ed;--accent2:#68d391;--accent3:#f6ad55;--danger:#fc8181;--purple:#a78bfa;--text:#e2e8f0;--muted:#718096}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 20%,rgba(99,179,237,0.06) 0%,transparent 60%),radial-gradient(ellipse 40% 60% at 80% 80%,rgba(104,211,145,0.04) 0%,transparent 60%);pointer-events:none;z-index:0}
 
 /* LOCK */
-#lockScreen{position:fixed;inset:0;background:#060a12;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column}
+#lockScreen{position:fixed;inset:0;background:#060a12;z-index:9999;display:flex;align-items:center;justify-content:center}
 #lockScreen.hidden{display:none}
 .lock-box{background:#0d1420;border:1px solid rgba(99,179,237,0.2);border-radius:20px;padding:2.5rem 2rem;width:320px;text-align:center}
-.lock-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:#63b3ed;margin-bottom:.3rem}.lock-logo span{color:#68d391}
-.lock-sub{color:#718096;font-size:.85rem;margin-bottom:2rem}
-.lock-icon{font-size:2.5rem;margin-bottom:1.2rem}
-.pin-dots{display:flex;justify-content:center;gap:10px;margin-bottom:1.5rem}
+.lock-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:#63b3ed}.lock-logo span{color:#68d391}
+.lock-sub{color:#718096;font-size:.85rem;margin-bottom:1.5rem}
+.lock-icon{font-size:2rem;margin-bottom:1rem}
+.pin-dots{display:flex;justify-content:center;gap:10px;margin-bottom:1.2rem}
 .pin-dot{width:14px;height:14px;border-radius:50%;background:#1a2540;border:2px solid rgba(99,179,237,0.3);transition:all .2s}
 .pin-dot.filled{background:#63b3ed;border-color:#63b3ed;transform:scale(1.1)}
-.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:.8rem}
 .num-btn{background:#131c2e;border:1px solid rgba(99,179,237,0.15);color:#e2e8f0;padding:14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;cursor:pointer;transition:all .15s}
 .num-btn:hover{background:#1a2540;border-color:#63b3ed}
 .num-btn:active{transform:scale(.95)}
 .num-btn.del{font-size:1rem;color:#718096}
 .num-btn.enter{background:#63b3ed;color:#060a12;font-size:.9rem}
 .lock-err{color:#fc8181;font-size:.82rem;margin-top:.5rem;min-height:1.2rem}
-.lock-hint{color:#4a5568;font-size:.75rem;margin-top:1rem}
 
 /* HEADER */
-header{position:sticky;top:0;z-index:100;background:rgba(6,10,18,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px;gap:1rem}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--accent);white-space:nowrap}.logo span{color:var(--accent2)}
-.nav-tabs{display:flex;gap:3px;flex-wrap:wrap}
-.nav-tab{padding:5px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:500;border:none;background:transparent;color:var(--muted);transition:all .2s;white-space:nowrap}
+header{position:sticky;top:0;z-index:100;background:rgba(6,10,18,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 1.2rem;display:flex;align-items:center;justify-content:space-between;height:56px;gap:.8rem}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--accent);white-space:nowrap;cursor:pointer}.logo span{color:var(--accent2)}
+.nav-tabs{display:flex;gap:2px;flex-wrap:wrap}
+.nav-tab{padding:5px 10px;border-radius:8px;cursor:pointer;font-size:.75rem;font-weight:500;border:none;background:transparent;color:var(--muted);transition:all .2s;white-space:nowrap}
 .nav-tab:hover{color:var(--text);background:var(--surface2)}
 .nav-tab.active{background:var(--accent);color:#060a12}
-.progress-badge{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent2);background:rgba(104,211,145,.1);border:1px solid rgba(104,211,145,.3);padding:4px 10px;border-radius:20px;white-space:nowrap}
+.hdr-right{display:flex;align-items:center;gap:8px}
+.progress-badge{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--accent2);background:rgba(104,211,145,.1);border:1px solid rgba(104,211,145,.3);padding:3px 9px;border-radius:20px;white-space:nowrap}
+.avatar-btn{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));border:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:800;font-size:.85rem;color:#060a12;flex-shrink:0}
 
 /* MAIN */
-main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:1.5rem}
+main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:1.2rem}
 .section{display:none}.section.active{display:block}
 
-/* HOME */
-.hero{text-align:center;padding:2rem 0 1.5rem}
-.hero h1{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:800;line-height:1.1;margin-bottom:1rem}
-.grad{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero p{color:var(--muted);font-size:1rem;max-width:500px;margin:0 auto 1.5rem;line-height:1.7}
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.2rem;text-align:center}
-.stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--accent)}
-.stat-label{color:var(--muted);font-size:.82rem;margin-top:4px}
-.section-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:10px}
-.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent)}
-.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.month-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem}
-.month-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.month-dot{width:10px;height:10px;border-radius:50%}
-.month-card ul{list-style:none}
-.month-card li{padding:4px 0;font-size:.8rem;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:5px}
-.month-card li::before{content:'→';color:var(--accent);flex-shrink:0}
+/* DASHBOARD */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.2rem}
+.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.2rem}
+.dash-card.wide{grid-column:span 2}
+.dash-card.full{grid-column:1/-1}
+.d-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.4rem}
+.d-val{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--accent)}
+.d-sub{font-size:.78rem;color:var(--muted);margin-top:2px}
+
+/* POMODORO */
+.pomo-ring{position:relative;width:160px;height:160px;margin:0 auto 1rem}
+.pomo-ring svg{transform:rotate(-90deg)}
+.pomo-ring circle{fill:none;stroke-width:10;transition:stroke-dashoffset .5s}
+.pomo-bg{stroke:rgba(99,179,237,.1)}
+.pomo-fill{stroke:var(--accent);stroke-linecap:round}
+.pomo-fill.break{stroke:var(--accent2)}
+.pomo-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.pomo-time{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;color:var(--text)}
+.pomo-mode{font-size:.7rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:1px}
+.pomo-btns{display:flex;gap:8px;justify-content:center;margin-bottom:.8rem}
+.pomo-sess{display:flex;gap:5px;justify-content:center}
+.pomo-dot{width:10px;height:10px;border-radius:50%;background:var(--surface2);border:1px solid var(--border)}
+.pomo-dot.done{background:var(--accent2)}
+
+/* STREAK BAR */
+.streak-bar{display:flex;gap:3px;flex-wrap:wrap}
+.streak-day{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-family:'JetBrains Mono',monospace;color:var(--muted)}
+.streak-day.studied{background:rgba(99,179,237,.3);color:var(--accent);border:1px solid rgba(99,179,237,.3)}
+.streak-day.today{border:2px solid var(--accent2)!important;color:var(--accent2)}
+
+/* SECTION TITLE */
+.sec-title{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:10px}
+.sec-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent)}
 
 /* TOPICS */
-.topics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:2rem}
-.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.3rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.topics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1rem}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.2rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
 .topic-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 30px rgba(99,179,237,.1)}
 .topic-card.done{border-color:rgba(104,211,145,.4)}
-.topic-card.done::after{content:'✓';position:absolute;top:10px;right:12px;color:var(--accent2);font-size:1rem;font-weight:700}
-.topic-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:5px}
-.topic-name{font-weight:600;font-size:.88rem;line-height:1.4}
-.topic-meta{margin-top:8px;display:flex;gap:6px}
-.tag{font-size:.68rem;padding:2px 7px;border-radius:6px;font-weight:500}
+.topic-card.done::after{content:'✓';position:absolute;top:10px;right:12px;color:var(--accent2);font-weight:700}
+.topic-num{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);margin-bottom:4px}
+.topic-name{font-weight:600;font-size:.86rem;line-height:1.4}
+.topic-meta{margin-top:7px;display:flex;gap:5px}
+.tag{font-size:.65rem;padding:2px 6px;border-radius:5px;font-weight:500}
 .tag-k{background:rgba(99,179,237,.15);color:var(--accent)}
 .tag-a{background:rgba(246,173,85,.15);color:var(--accent3)}
 .tag-ky{background:rgba(252,129,129,.15);color:var(--danger)}
-.month-sep{grid-column:1/-1;font-family:'Syne',sans-serif;font-weight:700;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:1px;padding:4px 0}
+.month-sep{grid-column:1/-1;font-family:'Syne',sans-serif;font-weight:700;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:1px;padding:3px 0}
 
 /* DETAIL */
-.content-header{display:flex;align-items:center;gap:12px;margin-bottom:1.2rem;flex-wrap:wrap}
-.back-btn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:inherit;transition:all .15s}
+.back-btn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:6px 13px;border-radius:8px;cursor:pointer;font-size:.8rem;font-family:inherit;transition:all .15s}
 .back-btn:hover{border-color:var(--accent);color:var(--accent)}
-.tab-btns{display:flex;gap:6px;margin-bottom:1.2rem;flex-wrap:wrap}
-.anki-btn{padding:7px 16px;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:600;font-family:inherit;border:none;transition:all .15s}
+.tab-btns{display:flex;gap:6px;margin-bottom:1.1rem;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn{padding:7px 15px;border-radius:10px;cursor:pointer;font-size:.82rem;font-weight:600;font-family:inherit;border:none;transition:all .15s}
 .btn-blue{background:var(--accent);color:#060a12}
 .btn-orange{background:var(--accent3);color:#060a12}
 .btn-red{background:var(--danger);color:#060a12}
 .btn-green{background:var(--accent2);color:#060a12}
+.btn-purple{background:var(--purple);color:#060a12}
 .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
 .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm{padding:5px 11px;font-size:.76rem}
 .done-check{background:rgba(104,211,145,.2)!important;border-color:rgba(104,211,145,.5)!important;color:var(--accent2)!important}
 
 /* KONSPEKT */
-.konspekt-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.8rem;line-height:1.8}
-.konspekt-box h3{font-family:'Syne',sans-serif;color:var(--accent);margin:1.2rem 0 .5rem;font-size:1.05rem}
+.konspekt-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;line-height:1.8}
+.konspekt-box h3{font-family:'Syne',sans-serif;color:var(--accent);margin:1.1rem 0 .4rem;font-size:1rem}
 .konspekt-box h3:first-child{margin-top:0}
-.konspekt-box p{color:#cbd5e0;font-size:.91rem;margin-bottom:.6rem}
-.konspekt-box ul{list-style:none;padding-left:1rem;margin-bottom:.6rem}
-.konspekt-box ul li{font-size:.89rem;color:#cbd5e0;padding:3px 0}
+.konspekt-box p{color:#cbd5e0;font-size:.9rem;margin-bottom:.5rem}
+.konspekt-box ul{list-style:none;padding-left:.8rem;margin-bottom:.5rem}
+.konspekt-box ul li{font-size:.88rem;color:#cbd5e0;padding:2px 0}
 .konspekt-box ul li::before{content:'• ';color:var(--accent2)}
 .konspekt-box strong{color:var(--accent3)}
-.konspekt-box .highlight{background:rgba(99,179,237,.1);border-left:3px solid var(--accent);padding:.8rem 1rem;border-radius:0 8px 8px 0;margin:.8rem 0}
+.konspekt-box .highlight{background:rgba(99,179,237,.1);border-left:3px solid var(--accent);padding:.7rem .9rem;border-radius:0 8px 8px 0;margin:.7rem 0;border-radius:0}
+
+/* MY KONSPEKT */
+.my-k-toolbar{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.my-k-list{display:flex;flex-direction:column;gap:.7rem;margin-bottom:1rem}
+.my-k-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.3rem;cursor:pointer;transition:all .2s;position:relative}
+.my-k-card:hover{border-color:var(--accent)}
+.my-k-title{font-weight:600;font-size:.92rem;margin-bottom:.3rem}
+.my-k-preview{font-size:.8rem;color:var(--muted);line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.my-k-meta{display:flex;gap:8px;margin-top:.5rem;align-items:center}
+.my-k-date{font-size:.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.my-k-topic-tag{font-size:.68rem;padding:2px 7px;border-radius:5px;background:rgba(167,139,250,.15);color:var(--purple)}
+.my-k-actions{position:absolute;top:10px;right:12px;display:flex;gap:5px}
+.icon-btn{background:transparent;border:none;cursor:pointer;font-size:1rem;opacity:.5;transition:opacity .15s}
+.icon-btn:hover{opacity:1}
+.editor-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.3rem}
+.editor-title{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;padding:.5rem 0;margin-bottom:.8rem;outline:none}
+.editor-title::placeholder{color:var(--muted)}
+.editor-toolbar{display:flex;gap:5px;margin-bottom:.6rem;flex-wrap:wrap}
+.fmt-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:4px 9px;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600;font-family:inherit}
+.fmt-btn:hover{border-color:var(--accent)}
+.editor-topic{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:8px;font-family:inherit;font-size:.8rem;margin-bottom:.8rem;width:100%}
+.editor-area{width:100%;min-height:220px;background:transparent;border:none;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.9rem;line-height:1.8;resize:vertical;outline:none}
+.editor-area::placeholder{color:var(--muted)}
+.preview-area{min-height:120px;font-size:.9rem;line-height:1.8;color:#cbd5e0;white-space:pre-wrap;word-break:break-word}
+.search-inp{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:8px;font-family:inherit;font-size:.82rem;width:220px;outline:none}
+.search-inp:focus{border-color:var(--accent)}
 
 /* ANKI */
-.flashcard{perspective:1000px;height:260px;cursor:pointer;margin-bottom:1rem}
+.flashcard{perspective:1000px;height:240px;cursor:pointer;margin-bottom:.8rem}
 .flashcard-inner{width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;position:relative}
 .flashcard.flipped .flashcard-inner{transform:rotateY(180deg)}
-.card-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;background:var(--surface);border:1px solid var(--border);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;text-align:center}
+.card-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;background:var(--surface);border:1px solid var(--border);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.3rem;text-align:center}
 .card-face.back{transform:rotateY(180deg);background:var(--surface2);border-color:var(--accent)}
-.card-label{font-size:.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:.8rem;text-transform:uppercase;letter-spacing:1px}
-.card-q{font-size:1rem;font-weight:600;line-height:1.5;color:var(--text)}
-.card-a{font-size:.9rem;color:var(--accent2);line-height:1.6}
-.card-hint{margin-top:.8rem;font-size:.75rem;color:var(--muted)}
-.card-counter{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);padding:6px 0}
-.rating-row{display:flex;gap:8px;justify-content:center;margin-top:.5rem}
-.finish-box{text-align:center;padding:2.5rem}
+.card-label{font-size:.68rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:.7rem;text-transform:uppercase;letter-spacing:1px}
+.card-q{font-size:.98rem;font-weight:600;line-height:1.5}
+.card-a{font-size:.88rem;color:var(--accent2);line-height:1.6}
+.card-hint{margin-top:.7rem;font-size:.72rem;color:var(--muted)}
+.card-counter{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);padding:5px 0}
+.rating-row{display:flex;gap:7px;justify-content:center;margin-top:.4rem}
 
 /* KEYS */
-.keys-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
-.keys-badge{display:inline-block;padding:2px 9px;border-radius:6px;font-size:.7rem;font-weight:600;margin-bottom:10px}
+.keys-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;margin-bottom:.8rem}
+.keys-badge{display:inline-block;padding:2px 8px;border-radius:5px;font-size:.68rem;font-weight:600;margin-bottom:8px}
 .badge-q{background:rgba(252,129,129,.2);color:var(--danger)}
 .badge-o{background:rgba(246,173,85,.2);color:var(--accent3)}
 .badge-os{background:rgba(104,211,145,.2);color:var(--accent2)}
-.keys-title{font-weight:700;font-size:.95rem;margin-bottom:8px}
-.keys-scenario{font-size:.88rem;color:#a0aec0;line-height:1.7;margin-bottom:.8rem;padding:.8rem;background:rgba(255,255,255,.03);border-radius:10px;border-left:3px solid var(--accent)}
-.keys-question{font-weight:600;margin-bottom:.8rem;color:var(--accent3);font-size:.9rem}
-.reveal-btn{background:transparent;border:1px solid var(--border);color:var(--text);padding:9px 18px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:.88rem;transition:all .2s;width:100%}
+.keys-scenario{font-size:.86rem;color:#a0aec0;line-height:1.7;padding:.7rem .9rem;background:rgba(255,255,255,.03);border-radius:8px;border-left:3px solid var(--accent);margin-bottom:.7rem}
+.keys-q{font-weight:600;color:var(--accent3);font-size:.88rem;margin-bottom:.7rem}
+.reveal-btn{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.85rem;transition:all .2s;width:100%}
 .reveal-btn:hover{border-color:var(--accent);color:var(--accent)}
-.keys-answer{margin-top:.8rem;padding:1rem;background:rgba(104,211,145,.05);border:1px solid rgba(104,211,145,.2);border-radius:10px;font-size:.86rem;color:#a0aec0;line-height:1.7;display:none}
+.keys-answer{margin-top:.7rem;padding:.9rem;background:rgba(104,211,145,.05);border:1px solid rgba(104,211,145,.2);border-radius:8px;font-size:.84rem;color:#a0aec0;line-height:1.7;display:none}
 .keys-answer.show{display:block}
 
 /* EXAM */
-.exam-header{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-.timer-display{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;color:var(--accent)}
+.exam-header{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.3rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem}
+.timer-display{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--accent)}
 .timer-display.warn{color:var(--accent3)}
 .timer-display.danger{color:var(--danger);animation:blink .8s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
-.exam-progress{font-size:.85rem;color:var(--muted)}
-.exam-q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
-.exam-q-num{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);margin-bottom:.5rem}
-.exam-q-text{font-size:1rem;font-weight:600;line-height:1.5;margin-bottom:1.2rem}
-.exam-options{display:flex;flex-direction:column;gap:.5rem}
-.exam-option{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.2rem;cursor:pointer;font-size:.9rem;text-align:left;font-family:inherit;color:var(--text);transition:all .15s}
-.exam-option:hover{border-color:var(--accent);color:var(--accent)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.exam-q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;margin-bottom:.8rem}
+.exam-option{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:.8rem 1.1rem;cursor:pointer;font-size:.88rem;text-align:left;font-family:inherit;color:var(--text);transition:all .15s;display:block;width:100%;margin-bottom:.4rem}
+.exam-option:hover{border-color:var(--accent)}
 .exam-option.selected{border-color:var(--accent);background:rgba(99,179,237,.1);color:var(--accent)}
 .exam-option.correct{border-color:var(--accent2);background:rgba(104,211,145,.1);color:var(--accent2)}
 .exam-option.wrong{border-color:var(--danger);background:rgba(252,129,129,.1);color:var(--danger)}
-.exam-nav{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}
-.result-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2rem;text-align:center;margin-bottom:1.5rem}
-.result-score{font-family:'Syne',sans-serif;font-size:4rem;font-weight:800;margin:.5rem 0}
-.result-grade{font-size:1.2rem;font-weight:600;margin-bottom:1rem}
-.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem}
-.r-stat{background:var(--surface2);border-radius:12px;padding:1rem;text-align:center}
-.r-stat-num{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700}
-.r-stat-label{font-size:.75rem;color:var(--muted);margin-top:4px}
-.wrong-list{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.2rem}
-.wrong-item{padding:.8rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.87rem}
+.result-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:1.8rem;text-align:center;margin-bottom:1.2rem}
+.result-score{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;margin:.4rem 0}
+.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1.2rem}
+.r-stat{background:var(--surface2);border-radius:10px;padding:.9rem;text-align:center}
+.r-stat-num{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700}
+.r-stat-label{font-size:.72rem;color:var(--muted);margin-top:3px}
+.wrong-list{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem}
+.wrong-item{padding:.7rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.84rem}
 .wrong-item:last-child{border-bottom:none}
-.wrong-item .wq{color:var(--text);margin-bottom:.3rem}
-.wrong-item .wa{color:var(--accent2);font-size:.82rem}
 
-/* STREAK */
-.streak-bar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1rem}
-.streak-day{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-family:'JetBrains Mono',monospace;color:var(--muted);cursor:default}
-.streak-day.studied{background:rgba(99,179,237,.3);color:var(--accent);border:1px solid rgba(99,179,237,.4)}
-.streak-day.today{border:2px solid var(--accent2);color:var(--accent2)}
-
-/* NOTIF */
-.notif-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
-.notif-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
-.toggle-switch{position:relative;width:48px;height:26px;cursor:pointer}
+/* PROFILE */
+.profile-header{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1.5rem}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:#060a12;flex-shrink:0;cursor:pointer}
+.profile-name{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800}
+.profile-title{font-size:.85rem;color:var(--muted);margin-top:3px}
+.profile-edit{margin-top:.6rem}
+.profile-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.2rem}
+.p-stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;text-align:center}
+.p-stat-num{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--accent)}
+.p-stat-label{font-size:.75rem;color:var(--muted);margin-top:3px}
+.progress-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.progress-label{font-size:.78rem;width:190px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.progress-bar{flex:1;height:6px;background:var(--surface2);border-radius:20px;overflow:hidden}
+.progress-fill{height:100%;border-radius:20px;background:linear-gradient(to right,var(--accent),var(--accent2));transition:width .5s}
+.progress-pct{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--accent);width:32px}
+.edit-form{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.2rem;margin-bottom:1.2rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem}
+.form-inp{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:9px;font-family:inherit;font-size:.85rem;outline:none}
+.form-inp:focus{border-color:var(--accent)}
+.form-label{font-size:.75rem;color:var(--muted);margin-bottom:4px}
+.avatar-opts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.8rem}
+.ava-opt{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.ava-opt:hover,.ava-opt.selected{border-color:var(--accent);transform:scale(1.1)}
+.notif-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:1rem}
+.notif-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem}
+.toggle-switch{position:relative;width:46px;height:24px;cursor:pointer}
 .toggle-switch input{opacity:0;width:0;height:0}
-.toggle-slider{position:absolute;inset:0;background:#1a2540;border-radius:13px;transition:.3s;border:1px solid var(--border)}
-.toggle-slider::before{content:'';position:absolute;width:20px;height:20px;left:2px;top:2px;background:var(--muted);border-radius:50%;transition:.3s}
+.toggle-slider{position:absolute;inset:0;background:#1a2540;border-radius:12px;transition:.3s;border:1px solid var(--border)}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;background:var(--muted);border-radius:50%;transition:.3s}
 input:checked+.toggle-slider{background:rgba(99,179,237,.3);border-color:var(--accent)}
 input:checked+.toggle-slider::before{transform:translateX(22px);background:var(--accent)}
-.notif-label{font-weight:600;font-size:.9rem}
-.notif-desc{font-size:.8rem;color:var(--muted);margin-top:2px}
-.sr-input{display:flex;gap:8px;margin-top:.5rem}
-.sr-input select{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:8px;font-family:inherit;font-size:.82rem;flex:1}
-
-/* PROGRESS */
-.progress-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.progress-label{font-size:.8rem;width:200px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.progress-bar{flex:1;height:7px;background:var(--surface2);border-radius:20px;overflow:hidden}
-.progress-fill{height:100%;border-radius:20px;background:linear-gradient(to right,var(--accent),var(--accent2));transition:width .5s ease}
-.progress-pct{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);width:34px}
-
-/* PWA BANNER */
-#pwaBanner{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid rgba(99,179,237,.3);border-radius:16px;padding:1rem 1.2rem;max-width:280px;z-index:200;box-shadow:0 8px 30px rgba(0,0,0,.4);display:none}
-#pwaBanner.show{display:block}
-.pwa-title{font-weight:700;font-size:.9rem;margin-bottom:.3rem}
-.pwa-desc{font-size:.78rem;color:var(--muted);margin-bottom:.8rem;line-height:1.5}
-.pwa-btns{display:flex;gap:6px}
-
-select{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:8px;font-family:inherit;font-size:.82rem}
-@media(max-width:700px){.stats-row{grid-template-columns:1fr 1fr}.plan-grid{grid-template-columns:1fr}.topics-grid{grid-column:1}.nav-tab{font-size:.72rem;padding:5px 8px}}
+select{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:8px;font-family:inherit;font-size:.8rem}
+.finish-box{text-align:center;padding:2rem}
+@media(max-width:750px){.dash-grid{grid-template-columns:1fr 1fr}.dash-card.wide{grid-column:1/-1}.profile-stats{grid-template-columns:1fr 1fr}.form-row{grid-template-columns:1fr}.nav-tab{font-size:.7rem;padding:4px 7px}}
+@media(max-width:500px){.dash-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -209,12 +241,9 @@ select{background:var(--surface);border:1px solid var(--border);color:var(--text
     <div class="lock-sub">Shaxsiy o'quv platformasi</div>
     <div class="lock-icon">🔐</div>
     <div class="pin-dots">
-      <div class="pin-dot" id="d0"></div>
-      <div class="pin-dot" id="d1"></div>
-      <div class="pin-dot" id="d2"></div>
-      <div class="pin-dot" id="d3"></div>
-      <div class="pin-dot" id="d4"></div>
-      <div class="pin-dot" id="d5"></div>
+      <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
+      <div class="pin-dot" id="d4"></div><div class="pin-dot" id="d5"></div>
     </div>
     <div class="numpad">
       <button class="num-btn" onclick="pinPress('1')">1</button>
@@ -231,102 +260,132 @@ select{background:var(--surface);border:1px solid var(--border);color:var(--text
       <button class="num-btn enter" onclick="pinEnter()">OK</button>
     </div>
     <div class="lock-err" id="lockErr"></div>
-    <div class="lock-hint">Faqat ruxsat etilgan foydalanuvchi</div>
-  </div>
-</div>
-
-<!-- PWA BANNER -->
-<div id="pwaBanner">
-  <div class="pwa-title">📱 Ilovaga o'rnatish</div>
-  <div class="pwa-desc">NeuronUZB ni telefon ekraniga ilovadek o'rnating — oflayn ishlaydi!</div>
-  <div class="pwa-btns">
-    <button class="anki-btn btn-blue" id="pwaInstallBtn" onclick="installPWA()">O'rnatish</button>
-    <button class="anki-btn btn-ghost" onclick="document.getElementById('pwaBanner').classList.remove('show')">Keyinroq</button>
   </div>
 </div>
 
 <header>
-  <div class="logo">Neuron<span>UZB</span></div>
+  <div class="logo" onclick="show('dashboard')">Neuron<span>UZB</span></div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="show('home')">🏠 Bosh</button>
+    <button class="nav-tab active" onclick="show('dashboard')">📊 Dashboard</button>
     <button class="nav-tab" onclick="show('topics')">📚 Mavzular</button>
     <button class="nav-tab" onclick="show('anki')">🃏 Anki</button>
     <button class="nav-tab" onclick="show('keys')">🩺 Keyslar</button>
+    <button class="nav-tab" onclick="show('mykonspekt')">✍️ Konspektim</button>
     <button class="nav-tab" onclick="show('exam')">📝 Imtihon</button>
-    <button class="nav-tab" onclick="show('progress')">📊 Progress</button>
   </div>
-  <div class="progress-badge" id="badge">0 / 23</div>
+  <div class="hdr-right">
+    <div class="progress-badge" id="badge">0/23</div>
+    <button class="avatar-btn" id="avatarBtn" onclick="show('profile')">M</button>
+  </div>
 </header>
 
 <main>
 
-<!-- HOME -->
-<div class="section active" id="home">
-  <div class="hero">
-    <h1>3 oyda <span class="grad">Neyroanatomiya</span><br>mukammal o'rgan</h1>
-    <p>Konspekt, Anki kartochkalar, klinik keyslar va imtihon simulyatori bilan ilmiy asosda tayyorlangan platform.</p>
-  </div>
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-num">23</div><div class="stat-label">Jami mavzu</div></div>
-    <div class="stat-card"><div class="stat-num">184</div><div class="stat-label">Anki kartochka</div></div>
-    <div class="stat-card"><div class="stat-num" id="streakStat">0</div><div class="stat-label">🔥 Kun ketma-ket</div></div>
+<!-- DASHBOARD -->
+<div class="section active" id="dashboard">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.5rem">
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800" id="greetMsg">Salom! 👋</div>
+      <div style="font-size:.82rem;color:var(--muted)" id="greetSub">Bugun ham o'qish vaqti</div>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted)" id="todayDate"></div>
   </div>
 
-  <!-- Streak -->
-  <div class="section-title">So'nggi 30 kun</div>
-  <div class="streak-bar" id="streakBar"></div>
+  <div class="dash-grid">
+    <!-- Pomodoro -->
+    <div class="dash-card" style="text-align:center">
+      <div class="d-label">⏱ Pomodoro Taymer</div>
+      <div class="pomo-ring">
+        <svg width="160" height="160" viewBox="0 0 160 160">
+          <circle class="pomo-bg" cx="80" cy="80" r="70" stroke-dasharray="440" stroke-dashoffset="0"/>
+          <circle class="pomo-fill" id="pomoCircle" cx="80" cy="80" r="70" stroke-dasharray="440" stroke-dashoffset="0"/>
+        </svg>
+        <div class="pomo-center">
+          <div class="pomo-time" id="pomoTime">25:00</div>
+          <div class="pomo-mode" id="pomoMode">DARS</div>
+        </div>
+      </div>
+      <div class="pomo-btns">
+        <button class="btn btn-blue btn-sm" id="pomoStartBtn" onclick="pomoToggle()">▶ Boshlash</button>
+        <button class="btn btn-ghost btn-sm" onclick="pomoReset()">↺ Reset</button>
+        <button class="btn btn-ghost btn-sm" onclick="pomoSkip()">⏭ Skip</button>
+      </div>
+      <div class="pomo-sess" id="pomoSessions"></div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:.5rem" id="pomoStatus">4 ta seans = uzun dam</div>
+    </div>
 
-  <div class="section-title" style="margin-top:1.5rem">3 oylik o'quv rejasi</div>
-  <div class="plan-grid">
-    <div class="month-card">
-      <div class="month-title"><div class="month-dot" style="background:#63b3ed"></div>1-OY — Asoslar</div>
-      <ul>
-        <li>Neyron tuzilishi (1)</li><li>Glial to'qimalar (2)</li>
-        <li>Orqa miya (3-5)</li><li>Sezgi sistemasi (6-7)</li><li>Harakat sistemasi (8-9)</li>
-      </ul>
+    <!-- Stats -->
+    <div class="dash-card">
+      <div class="d-label">📈 Bugungi natija</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:.5rem">
+        <div><div class="d-val" id="dTodayCards">0</div><div class="d-sub">Kartochka</div></div>
+        <div><div class="d-val" style="color:var(--accent2)" id="dStreak">0</div><div class="d-sub">🔥 Streak</div></div>
+        <div><div class="d-val" style="color:var(--purple)" id="dMyK">0</div><div class="d-sub">Konspektim</div></div>
+        <div><div class="d-val" style="color:var(--accent3)" id="dExams">0</div><div class="d-sub">Imtihon</div></div>
+      </div>
     </div>
-    <div class="month-card">
-      <div class="month-title"><div class="month-dot" style="background:#68d391"></div>2-OY — Kranial Nervlar</div>
-      <ul>
-        <li>12-juft Hypoglossal (10)</li><li>10-juft Vagus (12)</li>
-        <li>8-juft Vestibulo (14)</li><li>7-juft Facial (15)</li>
-        <li>5-juft Trigeminal (16)</li><li>3-4-6-juft (17)</li>
-      </ul>
+
+    <!-- Progress ring -->
+    <div class="dash-card" style="text-align:center">
+      <div class="d-label">🎯 Umumiy progress</div>
+      <div style="position:relative;width:100px;height:100px;margin:1rem auto">
+        <svg width="100" height="100" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+          <circle fill="none" stroke="rgba(99,179,237,0.1)" stroke-width="8" cx="50" cy="50" r="42"/>
+          <circle fill="none" stroke="var(--accent2)" stroke-width="8" cx="50" cy="50" r="42"
+            stroke-dasharray="264" id="progressRing" stroke-dashoffset="264" stroke-linecap="round"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column">
+          <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--accent2)" id="pctNum">0%</div>
+          <div style="font-size:.65rem;color:var(--muted)">tugallandi</div>
+        </div>
+      </div>
+      <div style="font-size:.8rem;color:var(--muted)" id="doneLabel">0 / 23 mavzu</div>
     </div>
-    <div class="month-card">
-      <div class="month-title"><div class="month-dot" style="background:#f6ad55"></div>3-OY — Yuqori Markazlar</div>
-      <ul>
-        <li>Miyacha va ataksiya (20)</li><li>Ekstrapiramidal (21)</li>
-        <li>Katta yarimsharlari (22)</li><li>Avtonom NS (23)</li>
-      </ul>
+
+    <!-- Streak -->
+    <div class="dash-card wide">
+      <div class="d-label" style="margin-bottom:.7rem">🔥 So'nggi 28 kun</div>
+      <div class="streak-bar" id="streakBar"></div>
     </div>
-  </div>
-  <div class="section-title" style="margin-top:1.5rem">Tezkor kirish</div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button class="anki-btn btn-blue" onclick="show('topics')">📚 Mavzular</button>
-    <button class="anki-btn btn-orange" onclick="show('anki')">🃏 Anki</button>
-    <button class="anki-btn btn-red" onclick="show('keys')">🩺 Keyslar</button>
-    <button class="anki-btn" style="background:#a78bfa;color:#060a12" onclick="show('exam')">📝 Imtihon boshlash</button>
+
+    <!-- Quick links -->
+    <div class="dash-card full">
+      <div class="d-label" style="margin-bottom:.8rem">⚡ Tezkor kirish</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-blue" onclick="show('topics')">📚 Mavzular</button>
+        <button class="btn btn-orange" onclick="show('anki')">🃏 Anki boshlash</button>
+        <button class="btn btn-red" onclick="show('keys')">🩺 Klinik keyslar</button>
+        <button class="btn btn-purple" onclick="show('mykonspekt')">✍️ Konspekt yozish</button>
+        <button class="btn" style="background:var(--accent3);color:#060a12" onclick="show('exam')">📝 Imtihon</button>
+        <button class="btn btn-ghost" onclick="show('profile')">👤 Profil</button>
+      </div>
+    </div>
+
+    <!-- Last exam -->
+    <div class="dash-card wide" id="lastExamCard" style="display:none">
+      <div class="d-label">📝 So'nggi imtihon</div>
+      <div id="lastExamInfo"></div>
+    </div>
   </div>
 </div>
 
 <!-- TOPICS -->
 <div class="section" id="topics">
-  <div class="section-title">Barcha mavzular</div>
+  <div class="sec-title">Barcha mavzular</div>
   <div class="topics-grid" id="topicsGrid"></div>
 </div>
 
 <!-- DETAIL -->
 <div class="section" id="detail">
-  <div class="content-header">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
     <button class="back-btn" onclick="show('topics')">← Orqaga</button>
-    <h2 id="detailTitle" style="font-family:'Syne',sans-serif;font-size:1.1rem"></h2>
+    <h2 id="detailTitle" style="font-family:'Syne',sans-serif;font-size:1rem"></h2>
   </div>
   <div class="tab-btns">
-    <button class="anki-btn btn-blue" onclick="showTab('k')">📝 Konspekt</button>
-    <button class="anki-btn btn-orange" onclick="showTab('a')">🃏 Anki</button>
-    <button class="anki-btn btn-red" onclick="showTab('ky')">🩺 Keyslar</button>
-    <button class="anki-btn btn-ghost" id="doneBtn" onclick="markDone()">✓ Tugatdim</button>
+    <button class="btn btn-blue btn-sm" onclick="showTab('k')">📝 Konspekt</button>
+    <button class="btn btn-orange btn-sm" onclick="showTab('a')">🃏 Anki</button>
+    <button class="btn btn-red btn-sm" onclick="showTab('ky')">🩺 Keyslar</button>
+    <button class="btn btn-ghost btn-sm" id="doneBtn" onclick="markDone()">✓ Tugatdim</button>
   </div>
   <div id="tab-k"></div>
   <div id="tab-a" style="display:none"></div>
@@ -335,103 +394,168 @@ select{background:var(--surface);border:1px solid var(--border);color:var(--text
 
 <!-- ANKI -->
 <div class="section" id="anki">
-  <div class="section-title">🃏 Anki — Kartochkalar</div>
-  <div style="display:flex;gap:8px;margin-bottom:1.2rem;flex-wrap:wrap">
+  <div class="sec-title">🃏 Anki Kartochkalar</div>
+  <div style="display:flex;gap:8px;margin-bottom:1.1rem;flex-wrap:wrap">
     <select id="ankiSel"><option value="">Barcha mavzular (aralash)</option></select>
-    <button class="anki-btn btn-blue" onclick="startGlobalAnki()">Boshlash</button>
+    <button class="btn btn-blue" onclick="startGlobalAnki()">Boshlash</button>
   </div>
   <div id="ankiArea"></div>
 </div>
 
 <!-- KEYS -->
 <div class="section" id="keys">
-  <div class="section-title">🩺 Klinik Keyslar</div>
-  <div style="display:flex;gap:8px;margin-bottom:1.2rem;flex-wrap:wrap">
+  <div class="sec-title">🩺 Klinik Keyslar</div>
+  <div style="display:flex;gap:8px;margin-bottom:1.1rem;flex-wrap:wrap">
     <select id="keysSel"><option value="">Barcha mavzular</option></select>
-    <button class="anki-btn btn-red" onclick="showGlobalKeys()">Ko'rish</button>
+    <button class="btn btn-red" onclick="showGlobalKeys()">Ko'rish</button>
   </div>
   <div id="keysArea"></div>
+</div>
+
+<!-- MY KONSPEKT -->
+<div class="section" id="mykonspekt">
+  <div id="mkList">
+    <div class="sec-title">✍️ Mening Konspektim</div>
+    <div class="my-k-toolbar">
+      <button class="btn btn-purple" onclick="openEditor()">+ Yangi konspekt</button>
+      <input class="search-inp" id="mkSearch" placeholder="🔍 Qidirish..." oninput="renderMyK()">
+      <select id="mkFilter" onchange="renderMyK()" style="font-size:.8rem">
+        <option value="">Barcha mavzular</option>
+      </select>
+    </div>
+    <div class="my-k-list" id="mkListItems"></div>
+    <div id="mkEmpty" style="text-align:center;padding:3rem;color:var(--muted);display:none">
+      <div style="font-size:2rem;margin-bottom:.8rem">📝</div>
+      <div>Hali konspekt yozilmagan.</div>
+      <div style="font-size:.82rem;margin-top:.3rem">Yuqoridagi "Yangi konspekt" tugmasini bosing!</div>
+    </div>
+  </div>
+  <div id="mkEditor" style="display:none">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
+      <button class="back-btn" onclick="closeEditor()">← Orqaga</button>
+      <span style="font-family:'Syne',sans-serif;font-weight:700" id="editorLabel">Yangi konspekt</span>
+    </div>
+    <div class="editor-wrap">
+      <input class="editor-title" id="edTitle" placeholder="Sarlavha kiriting...">
+      <select class="editor-topic" id="edTopic"><option value="">Mavzu tanlang (ixtiyoriy)</option></select>
+      <div style="display:flex;gap:8px;margin-bottom:.6rem">
+        <button class="btn btn-ghost btn-sm" id="editViewBtn" onclick="setEdView('edit')" style="border-color:var(--accent);color:var(--accent)">✏️ Tahrir</button>
+        <button class="btn btn-ghost btn-sm" id="preViewBtn" onclick="setEdView('preview')">👁 Ko'rish</button>
+      </div>
+      <div class="editor-toolbar" id="edToolbar">
+        <button class="fmt-btn" onclick="fmt('**','**')"><b>B</b></button>
+        <button class="fmt-btn" onclick="fmt('*','*')"><i>I</i></button>
+        <button class="fmt-btn" onclick="fmtLine('### ')">H3</button>
+        <button class="fmt-btn" onclick="fmtLine('- ')">• List</button>
+        <button class="fmt-btn" onclick="fmtLine('> ')">❝ Quote</button>
+        <button class="fmt-btn" onclick="fmtLine('---\n')">— HR</button>
+      </div>
+      <textarea class="editor-area" id="edArea" placeholder="Konspektingizni yozing...&#10;&#10;Markdown qo'llab-quvvatlanadi:&#10;**qalin**, *kursiv*, ### sarlavha, - ro'yxat"></textarea>
+      <div class="preview-area" id="edPreview" style="display:none"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:.8rem">
+      <button class="btn btn-purple" onclick="saveMyK()">💾 Saqlash</button>
+      <button class="btn btn-ghost" onclick="closeEditor()">Bekor qilish</button>
+      <button class="btn btn-red btn-sm" id="deleteKBtn" onclick="deleteMyK()" style="display:none;margin-left:auto">🗑 O'chirish</button>
+    </div>
+  </div>
+  <div id="mkView" style="display:none">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
+      <button class="back-btn" onclick="document.getElementById('mkView').style.display='none';document.getElementById('mkList').style.display='block'">← Orqaga</button>
+      <span id="mkViewTitle" style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem"></span>
+      <button class="btn btn-ghost btn-sm" style="margin-left:auto" id="mkEditBtn" onclick="editFromView()">✏️ Tahrirlash</button>
+    </div>
+    <div class="konspekt-box" id="mkViewContent"></div>
+  </div>
 </div>
 
 <!-- EXAM -->
 <div class="section" id="exam">
   <div id="examSetup">
-    <div class="section-title">📝 Imtihon Simulyatori</div>
-    <div class="notif-box" style="margin-bottom:1rem">
-      <div style="font-weight:600;margin-bottom:1rem">Imtihon sozlamalari</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
-        <div>
-          <div style="font-size:.82rem;color:var(--muted);margin-bottom:6px">Savol soni</div>
-          <select id="examCount" style="width:100%">
-            <option value="10">10 savol</option>
-            <option value="20" selected>20 savol</option>
-            <option value="40">40 savol</option>
-          </select>
-        </div>
-        <div>
-          <div style="font-size:.82rem;color:var(--muted);margin-bottom:6px">Vaqt (daqiqa)</div>
-          <select id="examTime" style="width:100%">
-            <option value="10">10 daqiqa</option>
-            <option value="20">20 daqiqa</option>
-            <option value="45" selected>45 daqiqa</option>
-            <option value="90">90 daqiqa</option>
-          </select>
-        </div>
+    <div class="sec-title">📝 Imtihon Simulyatori</div>
+    <div class="notif-box">
+      <div style="font-weight:600;margin-bottom:.9rem">Sozlamalar</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem">
+        <div><div class="form-label">Savol soni</div>
+          <select id="examCount" style="width:100%"><option value="10">10 savol</option><option value="20" selected>20 savol</option><option value="40">40 savol</option></select></div>
+        <div><div class="form-label">Vaqt</div>
+          <select id="examTime" style="width:100%"><option value="10">10 daqiqa</option><option value="20">20 daqiqa</option><option value="45" selected>45 daqiqa</option><option value="90">90 daqiqa</option></select></div>
       </div>
-      <div style="font-size:.82rem;color:var(--muted);margin-bottom:6px">Mavzu (ixtiyoriy)</div>
-      <select id="examTopic" style="width:100%;margin-bottom:1rem"><option value="">Barcha mavzular (aralash)</option></select>
-      <button class="anki-btn btn-blue" style="width:100%;padding:12px" onclick="startExam()">🚀 Imtihonni boshlash</button>
+      <div class="form-label">Mavzu</div>
+      <select id="examTopic" style="width:100%;margin-bottom:.9rem"><option value="">Barcha mavzular</option></select>
+      <button class="btn btn-blue" style="width:100%;padding:11px" onclick="startExam()">🚀 Boshlash</button>
     </div>
-    <div id="examHistory"></div>
+    <div id="examHistory" style="margin-top:1.2rem"></div>
   </div>
   <div id="examArea" style="display:none"></div>
 </div>
 
-<!-- PROGRESS -->
-<div class="section" id="progress">
-  <div class="section-title">📊 O'quv progressi</div>
-
-  <!-- Notifications -->
-  <div class="notif-box" style="margin-bottom:1.5rem">
-    <div style="font-weight:700;font-size:1rem;margin-bottom:1rem">🔔 Eslatmalar & Spaced Repetition</div>
-    <div class="notif-row">
+<!-- PROFILE -->
+<div class="section" id="profile">
+  <div id="profileView">
+    <div class="profile-header">
+      <div class="profile-avatar" id="profileAva" onclick="show('profileEdit')">M</div>
       <div>
-        <div class="notif-label">Kunlik eslatma</div>
-        <div class="notif-desc">Har kuni o'qish uchun brauzer bildirishnomasi</div>
+        <div class="profile-name" id="profileName">Foydalanuvchi</div>
+        <div class="profile-title" id="profileTitle">Tibbiyot talabaси</div>
+        <div class="profile-edit">
+          <button class="btn btn-ghost btn-sm" onclick="openProfileEdit()">✏️ Profilni tahrirlash</button>
+        </div>
       </div>
-      <label class="toggle-switch">
-        <input type="checkbox" id="dailyNotif" onchange="toggleNotif(this)">
-        <span class="toggle-slider"></span>
-      </label>
     </div>
-    <div style="border-top:1px solid rgba(255,255,255,.05);padding-top:1rem">
-      <div class="notif-label" style="margin-bottom:.5rem">⏱ Spaced Repetition jadval</div>
-      <div class="notif-desc" style="margin-bottom:.8rem">Anki kartochkalarni qachon qayta o'rganish kerak</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <span style="background:rgba(99,179,237,.1);border:1px solid rgba(99,179,237,.3);padding:4px 12px;border-radius:20px;font-size:.78rem;color:var(--accent)">1-kun</span>
-        <span style="background:rgba(99,179,237,.1);border:1px solid rgba(99,179,237,.3);padding:4px 12px;border-radius:20px;font-size:.78rem;color:var(--accent)">3-kun</span>
-        <span style="background:rgba(104,211,145,.1);border:1px solid rgba(104,211,145,.3);padding:4px 12px;border-radius:20px;font-size:.78rem;color:var(--accent2)">7-kun</span>
-        <span style="background:rgba(104,211,145,.1);border:1px solid rgba(104,211,145,.3);padding:4px 12px;border-radius:20px;font-size:.78rem;color:var(--accent2)">14-kun</span>
-        <span style="background:rgba(246,173,85,.1);border:1px solid rgba(246,173,85,.3);padding:4px 12px;border-radius:20px;font-size:.78rem;color:var(--accent3)">30-kun</span>
-      </div>
-      <div id="srStatus" style="margin-top:.8rem;font-size:.82rem;color:var(--muted)"></div>
+    <div class="profile-stats">
+      <div class="p-stat"><div class="p-stat-num" id="ps1">0</div><div class="p-stat-label">Tugatilgan mavzu</div></div>
+      <div class="p-stat"><div class="p-stat-num" id="ps2">0</div><div class="p-stat-label">O'rganilgan karta</div></div>
+      <div class="p-stat"><div class="p-stat-num" id="ps3">0</div><div class="p-stat-label">🔥 Streak</div></div>
+      <div class="p-stat"><div class="p-stat-num" id="ps4">0</div><div class="p-stat-label">Imtihon</div></div>
+    </div>
+    <div class="sec-title">Mavzular bo'yicha progress</div>
+    <div id="profileBars"></div>
+    <div style="margin-top:1rem;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="if(confirm('Barcha progressni o\'chirish?')){st.done=[];st.studied=0;st.streak=[];st.examHistory=[];st.todayCards=0;save();renderAll()}">🗑 Progressni tiklash</button>
     </div>
   </div>
-
-  <div id="progressBars"></div>
-  <div class="stats-row" style="margin-top:1rem">
-    <div class="stat-card"><div class="stat-num" id="doneCount">0</div><div class="stat-label">Tugatilgan mavzular</div></div>
-    <div class="stat-card"><div class="stat-num" id="studiedCount">0</div><div class="stat-label">O'rganilgan kartochkalar</div></div>
-    <div class="stat-card"><div class="stat-num" id="pctCount">0%</div><div class="stat-label">Umumiy progress</div></div>
-  </div>
-  <div style="margin-top:1rem;display:flex;gap:8px;flex-wrap:wrap">
-    <button class="anki-btn btn-ghost" onclick="if(confirm('Barcha progressni o\'chirish?')){st.done=[];st.studied=0;st.streak=[];st.examHistory=[];save();show('progress')}">🗑 Progressni tiklash</button>
+  <div id="profileEditForm" style="display:none">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
+      <button class="back-btn" onclick="closeProfileEdit()">← Orqaga</button>
+      <span style="font-family:'Syne',sans-serif;font-weight:700">Profilni tahrirlash</span>
+    </div>
+    <div class="edit-form">
+      <div class="form-row">
+        <div><div class="form-label">Ism</div><input class="form-inp" id="pfName" placeholder="Ismingiz"></div>
+        <div><div class="form-label">Unvon / Lavozim</div><input class="form-inp" id="pfTitle" placeholder="Masalan: 3-kurs talabasi"></div>
+      </div>
+      <div class="form-label" style="margin-bottom:.5rem">Avatar emoji</div>
+      <div class="avatar-opts" id="avatarOpts">
+        <div class="ava-opt" style="background:linear-gradient(135deg,#63b3ed,#a78bfa)" onclick="selectAva(this,'gradient')">🧑</div>
+        <div class="ava-opt" style="background:#1a2540" onclick="selectAva(this,'🩺')">🩺</div>
+        <div class="ava-opt" style="background:#1a2540" onclick="selectAva(this,'🧠')">🧠</div>
+        <div class="ava-opt" style="background:#1a2540" onclick="selectAva(this,'📚')">📚</div>
+        <div class="ava-opt" style="background:#1a2540" onclick="selectAva(this,'⚕️')">⚕️</div>
+        <div class="ava-opt" style="background:#1a2540" onclick="selectAva(this,'🎓')">🎓</div>
+        <div class="ava-opt" style="background:#1a2540" onclick="selectAva(this,'💊')">💊</div>
+        <div class="ava-opt" style="background:#1a2540" onclick="selectAva(this,'🔬')">🔬</div>
+      </div>
+      <button class="btn btn-blue" style="width:100%;margin-top:.5rem" onclick="saveProfile()">💾 Saqlash</button>
+    </div>
+    <!-- Notifications -->
+    <div class="notif-box">
+      <div style="font-weight:600;margin-bottom:.9rem">🔔 Eslatmalar</div>
+      <div class="notif-row">
+        <div><div style="font-weight:500;font-size:.88rem">Kunlik eslatma</div><div style="font-size:.76rem;color:var(--muted)">Har kuni ertalab soat 9:00</div></div>
+        <label class="toggle-switch"><input type="checkbox" id="dailyNotif" onchange="toggleNotif(this)"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="if(confirm('Barcha progressni o\'chirish?')){st.done=[];st.studied=0;st.streak=[];st.examHistory=[];save();renderAll();closeProfileEdit()}">🗑 Progressni tiklash</button>
+    </div>
   </div>
 </div>
 
 </main>
 
 <script>
+// =================== TOPICS DATA ===================
 const TOPICS=[
   {id:1,name:"Nerv to'qimasini tuzilishi va funksiyasi. Neyron turlari",m:1},
   {id:2,name:"Glial to'qimalar ya'ni Neyroglialar",m:1},
@@ -458,307 +582,414 @@ const TOPICS=[
   {id:23,name:"Periferik va Avtonom Nerv sistemasi",m:3},
 ];
 
-// ===== STATE =====
+// =================== STATE ===================
 const st={
   done: JSON.parse(localStorage.getItem('n_done')||'[]'),
   studied: parseInt(localStorage.getItem('n_studied')||'0'),
   streak: JSON.parse(localStorage.getItem('n_streak')||'[]'),
   examHistory: JSON.parse(localStorage.getItem('n_exams')||'[]'),
+  myKonspekts: JSON.parse(localStorage.getItem('n_myk')||'[]'),
+  profile: JSON.parse(localStorage.getItem('n_profile')||'{"name":"Foydalanuvchi","title":"Tibbiyot talabaси","ava":"gradient"}'),
+  todayCards: parseInt(localStorage.getItem('n_todaycards')||'0'),
+  todayDate: localStorage.getItem('n_todaydate')||'',
   curTopic: null,
+  editKId: null,
+  selAva: null,
 };
+
 function save(){
   localStorage.setItem('n_done',JSON.stringify(st.done));
   localStorage.setItem('n_studied',st.studied);
   localStorage.setItem('n_streak',JSON.stringify(st.streak));
   localStorage.setItem('n_exams',JSON.stringify(st.examHistory));
+  localStorage.setItem('n_myk',JSON.stringify(st.myKonspekts));
+  localStorage.setItem('n_profile',JSON.stringify(st.profile));
+  localStorage.setItem('n_todaycards',st.todayCards);
+  localStorage.setItem('n_todaydate',st.todayDate);
 }
+
 function recordStudy(){
   const today=new Date().toISOString().split('T')[0];
   if(!st.streak.includes(today)){st.streak.push(today);save();}
+  // reset daily cards
+  if(st.todayDate!==today){st.todayDate=today;st.todayCards=0;save();}
 }
 
-// ===== AUTH =====
+// =================== AUTH ===================
 const _a=[52,53,49],_b=[56,53,52];
-const SESSION_KEY='nuzb_auth';
+const SK='nuzb_auth';
 let failCount=0,pinVal='';
-
-function pinPress(n){
-  if(pinVal.length>=6) return;
-  pinVal+=n;
-  updateDots();
-  if(pinVal.length===6) setTimeout(pinEnter,200);
-}
+function pinPress(n){if(pinVal.length>=6)return;pinVal+=n;updateDots();if(pinVal.length===6)setTimeout(pinEnter,200);}
 function pinDel(){pinVal=pinVal.slice(0,-1);updateDots();}
-function updateDots(){
-  for(let i=0;i<6;i++){
-    const d=document.getElementById('d'+i);
-    d.classList.toggle('filled',i<pinVal.length);
-  }
-}
+function updateDots(){for(let i=0;i<6;i++)document.getElementById('d'+i).classList.toggle('filled',i<pinVal.length);}
 function pinEnter(){
   const correct=[..._a,..._b].map(c=>String.fromCharCode(c)).join('');
   const err=document.getElementById('lockErr');
   if(pinVal===correct){
-    const exp=Date.now()+24*60*60*1000;
-    localStorage.setItem(SESSION_KEY,exp);
+    localStorage.setItem(SK,Date.now()+86400000);
     document.getElementById('lockScreen').classList.add('hidden');
-    err.textContent=''; failCount=0; pinVal=''; updateDots();
-    recordStudy();
-    setTimeout(checkPWA,3000);
+    err.textContent='';failCount=0;pinVal='';updateDots();
+    recordStudy();renderAll();
   } else {
-    failCount++;
-    pinVal=''; updateDots();
+    failCount++;pinVal='';updateDots();
     if(failCount>=5){
       document.querySelectorAll('.num-btn').forEach(b=>b.disabled=true);
-      let sec=30;
-      err.textContent=`🔒 Bloklandi. ${sec} soniya.`;
-      const t=setInterval(()=>{
-        sec--;
-        err.textContent=`🔒 Bloklandi. ${sec} soniya.`;
-        if(sec<=0){clearInterval(t);failCount=0;document.querySelectorAll('.num-btn').forEach(b=>b.disabled=false);err.textContent='';}
-      },1000);
-    } else {
-      err.textContent=`❌ Noto'g'ri parol (${failCount}/5)`;
-      setTimeout(()=>{err.textContent='';},1500);
-    }
+      let s=30;err.textContent=`🔒 ${s}s`;
+      const t=setInterval(()=>{s--;err.textContent=`🔒 ${s}s`;if(s<=0){clearInterval(t);failCount=0;document.querySelectorAll('.num-btn').forEach(b=>b.disabled=false);err.textContent='';}},1000);
+    } else err.textContent=`❌ Noto'g'ri (${failCount}/5)`;
   }
 }
 function checkSession(){
-  const exp=localStorage.getItem(SESSION_KEY);
+  const exp=localStorage.getItem(SK);
   if(exp&&Date.now()<parseInt(exp)){
     document.getElementById('lockScreen').classList.add('hidden');
-    recordStudy();
-    setTimeout(checkPWA,3000);
+    recordStudy();renderAll();
   }
 }
 
-// ===== PWA =====
-let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{
-  e.preventDefault(); deferredPrompt=e;
-});
-function checkPWA(){
-  if(deferredPrompt&&!localStorage.getItem('pwa_dismissed')){
-    document.getElementById('pwaBanner').classList.add('show');
-  }
-}
-function installPWA(){
-  if(deferredPrompt){
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(()=>{
-      deferredPrompt=null;
-      document.getElementById('pwaBanner').classList.remove('show');
-    });
-  } else {
-    document.getElementById('pwaBanner').classList.remove('show');
-    alert('Brauzer menyusidan "Bosh ekranga qo\'shish" ni tanlang!');
-  }
-}
-
-// ===== NOTIFICATIONS =====
-function toggleNotif(el){
-  if(el.checked){
-    if('Notification' in window){
-      Notification.requestPermission().then(p=>{
-        if(p==='granted'){
-          localStorage.setItem('n_notif','1');
-          scheduleNotif();
-          updateSRStatus();
-        } else { el.checked=false; }
-      });
-    }
-  } else {
-    localStorage.removeItem('n_notif');
-  }
-}
-function scheduleNotif(){
-  if(localStorage.getItem('n_notif')==='1'&&Notification.permission==='granted'){
-    const now=new Date();
-    const target=new Date();
-    target.setHours(9,0,0,0);
-    if(now>target) target.setDate(target.getDate()+1);
-    const ms=target-now;
-    setTimeout(()=>{
-      new Notification('🧠 NeuronUZB',{body:"Bugun ham o'qish vaqti! Streak'ingizni saqlang 🔥",icon:'',tag:'daily'});
-      scheduleNotif();
-    },ms);
-  }
-}
-function updateSRStatus(){
-  const el=document.getElementById('srStatus');
-  if(!el) return;
-  const today=new Date().toISOString().split('T')[0];
-  const todayStudied=st.streak.includes(today);
-  el.textContent=todayStudied?'✅ Bugun o\'qidingiz! Keyingi takrorlash: 3 kundan keyin':'⏰ Bugun hali o\'qimadingiz';
-}
-
-// ===== STREAK =====
-function renderStreakBar(){
-  const bar=document.getElementById('streakBar');
-  if(!bar) return;
-  const days=30;
-  let html='';
-  for(let i=days-1;i>=0;i--){
-    const d=new Date(); d.setDate(d.getDate()-i);
-    const ds=d.toISOString().split('T')[0];
-    const isToday=i===0;
-    const studied=st.streak.includes(ds);
-    const dayNum=d.getDate();
-    html+=`<div class="streak-day ${studied?'studied':''} ${isToday?'today':''}" title="${ds}">${dayNum}</div>`;
-  }
-  bar.innerHTML=html;
-  // streak count
-  let cnt=0,d=new Date();
-  while(true){
-    const ds=d.toISOString().split('T')[0];
-    if(st.streak.includes(ds)){cnt++;d.setDate(d.getDate()-1);}
-    else break;
-  }
-  const ss=document.getElementById('streakStat');
-  if(ss) ss.textContent=cnt;
-}
-
-// ===== NAVIGATION =====
+// =================== NAVIGATION ===================
 function show(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  const map={home:0,topics:1,anki:2,keys:3,exam:4,progress:5,detail:1};
+  const map={dashboard:0,topics:1,anki:2,keys:3,mykonspekt:4,exam:5};
   const tabs=document.querySelectorAll('.nav-tab');
-  if(map[id]!=null) tabs[map[id]]?.classList.add('active');
-  if(id==='topics') renderTopics();
-  if(id==='progress'){renderProgress();updateSRStatus();}
-  if(id==='home') renderStreakBar();
+  if(map[id]!=null)tabs[map[id]]?.classList.add('active');
+  if(id==='topics')renderTopics();
+  if(id==='profile')renderProfile();
+  if(id==='mykonspekt'){document.getElementById('mkList').style.display='block';document.getElementById('mkEditor').style.display='none';document.getElementById('mkView').style.display='none';renderMyK();}
+  if(id==='dashboard')renderDashboard();
   updateBadge();
 }
-function updateBadge(){document.getElementById('badge').textContent=`${st.done.length} / 23`;}
 
-// ===== TOPICS =====
+// =================== DASHBOARD ===================
+function renderDashboard(){
+  const today=new Date();
+  const days=['Yakshanba','Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba'];
+  const months=['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'];
+  document.getElementById('todayDate').textContent=`${days[today.getDay()]}, ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+
+  const h=today.getHours();
+  const name=st.profile.name||'';
+  let greeting;
+  if(h<12) greeting='Xayrli tong';
+  else if(h<17) greeting='Xayrli kun';
+  else greeting='Xayrli kech';
+  document.getElementById('greetMsg').textContent=`${greeting}, ${name}! ${h<12?'🌅':h<17?'☀️':'🌙'}`;
+
+  // streak count
+  let cnt=0,d=new Date();
+  while(true){const ds=d.toISOString().split('T')[0];if(st.streak.includes(ds)){cnt++;d.setDate(d.getDate()-1);}else break;}
+
+  document.getElementById('dTodayCards').textContent=st.todayCards;
+  document.getElementById('dStreak').textContent=cnt;
+  document.getElementById('dMyK').textContent=st.myKonspekts.length;
+  document.getElementById('dExams').textContent=st.examHistory.length;
+
+  const pct=Math.round(st.done.length/23*100);
+  document.getElementById('pctNum').textContent=pct+'%';
+  document.getElementById('doneLabel').textContent=`${st.done.length} / 23 mavzu`;
+  document.getElementById('progressRing').style.strokeDashoffset=264-(264*pct/100);
+
+  renderStreakBar();
+
+  // last exam
+  if(st.examHistory.length){
+    const le=st.examHistory[0];
+    document.getElementById('lastExamCard').style.display='block';
+    document.getElementById('lastExamInfo').innerHTML=`<div style="display:flex;align-items:center;gap:1rem;margin-top:.5rem">
+      <div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:${le.score>=70?'var(--accent2)':le.score>=50?'var(--accent3)':'var(--danger)'}">${le.score}%</div>
+      <div><div style="font-weight:600">${le.grade} baho — ${le.correct}/${le.total} to'g'ri</div><div style="font-size:.78rem;color:var(--muted)">${le.date}</div></div>
+    </div>`;
+  }
+}
+
+function renderStreakBar(){
+  const bar=document.getElementById('streakBar');if(!bar)return;
+  let html='';
+  for(let i=27;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const ds=d.toISOString().split('T')[0];
+    const isToday=i===0;
+    const studied=st.streak.includes(ds);
+    html+=`<div class="streak-day ${studied?'studied':''} ${isToday?'today':''}" title="${ds}">${d.getDate()}</div>`;
+  }
+  bar.innerHTML=html;
+}
+
+// =================== POMODORO ===================
+let pomo={running:false,isBreak:false,timeLeft:25*60,total:25*60,sessions:0,maxSess:4,timer:null};
+const POMO_WORK=25*60, POMO_SHORT=5*60, POMO_LONG=15*60;
+
+function pomoRender(){
+  const m=Math.floor(pomo.timeLeft/60),s=pomo.timeLeft%60;
+  document.getElementById('pomoTime').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  document.getElementById('pomoMode').textContent=pomo.isBreak?(pomo.timeLeft===POMO_LONG?'UZUN DAM':'QISQA DAM'):'DARS';
+  const circ=document.getElementById('pomoCircle');
+  const pct=pomo.timeLeft/pomo.total;
+  circ.style.strokeDashoffset=440*(1-pct);
+  circ.className='pomo-fill'+(pomo.isBreak?' break':'');
+  document.getElementById('pomoStartBtn').textContent=pomo.running?'⏸ Pauza':'▶ Boshlash';
+  // sessions
+  let sh='';
+  for(let i=0;i<pomo.maxSess;i++)sh+=`<div class="pomo-dot ${i<pomo.sessions?'done':''}"></div>`;
+  document.getElementById('pomoSessions').innerHTML=sh;
+  document.getElementById('pomoStatus').textContent=pomo.isBreak?`Dam olish vaqti!`:(`${pomo.sessions}/${pomo.maxSess} seans • ${pomo.maxSess-pomo.sessions} seans qoldi`);
+}
+function pomoToggle(){
+  if(pomo.running){clearInterval(pomo.timer);pomo.running=false;}
+  else{pomo.running=true;pomo.timer=setInterval(()=>{
+    pomo.timeLeft--;
+    if(pomo.timeLeft<=0){
+      clearInterval(pomo.timer);pomo.running=false;
+      if(!pomo.isBreak){
+        pomo.sessions++;
+        const longBreak=pomo.sessions>=pomo.maxSess;
+        pomo.isBreak=true;
+        pomo.timeLeft=longBreak?POMO_LONG:POMO_SHORT;
+        pomo.total=pomo.timeLeft;
+        if(longBreak)pomo.sessions=0;
+        try{new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAA==').play();}catch(e){}
+      } else {
+        pomo.isBreak=false;pomo.timeLeft=POMO_WORK;pomo.total=POMO_WORK;
+      }
+    }
+    pomoRender();
+  },1000);}
+  pomoRender();
+}
+function pomoReset(){clearInterval(pomo.timer);pomo.running=false;pomo.isBreak=false;pomo.timeLeft=POMO_WORK;pomo.total=POMO_WORK;pomoRender();}
+function pomoSkip(){clearInterval(pomo.timer);pomo.running=false;
+  if(!pomo.isBreak){pomo.sessions++;pomo.isBreak=true;pomo.timeLeft=pomo.sessions>=pomo.maxSess?POMO_LONG:POMO_SHORT;if(pomo.sessions>=pomo.maxSess)pomo.sessions=0;}
+  else{pomo.isBreak=false;pomo.timeLeft=POMO_WORK;}
+  pomo.total=pomo.timeLeft;pomoRender();
+}
+
+// =================== TOPICS ===================
+function updateBadge(){document.getElementById('badge').textContent=`${st.done.length}/23`;}
 function renderTopics(){
   const g=document.getElementById('topicsGrid');
-  const mNames=['','1-OY','2-OY','3-OY'];
+  const mn=['','1-OY','2-OY','3-OY'];
   let html='',curM=0;
   TOPICS.forEach(t=>{
-    if(t.m!==curM){curM=t.m;html+=`<div class="month-sep">${mNames[curM]}</div>`;}
+    if(t.m!==curM){curM=t.m;html+=`<div class="month-sep">${mn[curM]}</div>`;}
     const done=st.done.includes(t.id);
     html+=`<div class="topic-card ${done?'done':''}" onclick="openTopic(${t.id})">
       <div class="topic-num">MAVZU ${t.id}</div>
       <div class="topic-name">${t.name}</div>
-      <div class="topic-meta">
-        <span class="tag tag-k">Konspekt</span>
-        <span class="tag tag-a">Anki</span>
-        <span class="tag tag-ky">Keyslar</span>
-      </div>
+      <div class="topic-meta"><span class="tag tag-k">Konspekt</span><span class="tag tag-a">Anki</span><span class="tag tag-ky">Keyslar</span></div>
     </div>`;
   });
   g.innerHTML=html;
 }
 function openTopic(id){
   st.curTopic=TOPICS.find(t=>t.id===id);
-  document.getElementById('detailTitle').textContent=`Mavzu ${id}: ${st.curTopic.name}`;
+  document.getElementById('detailTitle').textContent=`${st.curTopic.id}. ${st.curTopic.name}`;
   const db=document.getElementById('doneBtn');
-  if(st.done.includes(id)) db.classList.add('done-check'); else db.classList.remove('done-check');
-  show('detail'); showTab('k');
+  st.done.includes(id)?db.classList.add('done-check'):db.classList.remove('done-check');
+  show('detail');showTab('k');
 }
 function showTab(tab){
-  ['k','a','ky'].forEach(t=>{
-    const el=document.getElementById('tab-'+t);
-    if(el) el.style.display=t===tab?'block':'none';
-  });
-  if(tab==='k') renderKonspekt();
-  if(tab==='a') renderTopicAnki();
-  if(tab==='ky') renderTopicKeys();
+  ['k','a','ky'].forEach(t=>{const el=document.getElementById('tab-'+t);if(el)el.style.display=t===tab?'block':'none';});
+  if(tab==='k')renderKonspekt();
+  if(tab==='a')renderTopicAnki();
+  if(tab==='ky')renderTopicKeys();
 }
 function markDone(){
   const id=st.curTopic.id;
-  if(!st.done.includes(id)) st.done.push(id);
-  save(); updateBadge();
+  if(!st.done.includes(id))st.done.push(id);
+  save();updateBadge();
   document.getElementById('doneBtn').classList.add('done-check');
 }
-
-// ===== KONSPEKT =====
 function renderKonspekt(){
   const k=document.getElementById('tab-k');
-  const html=DATA.konspekt[st.curTopic.id]||'<p>Tayyorlanmoqda...</p>';
-  k.innerHTML=`<div class="konspekt-box">${html}</div>`;
+  k.innerHTML=`<div class="konspekt-box">${DATA.konspekt[st.curTopic.id]||'<p>Tayyorlanmoqda...</p>'}</div>`;
 }
-function renderTopicAnki(){
-  const cards=DATA.anki[st.curTopic.id]||[];
-  renderAnkiCards(document.getElementById('tab-a'),cards,'ta');
-}
+function renderTopicAnki(){renderAnkiCards(document.getElementById('tab-a'),DATA.anki[st.curTopic.id]||[],'ta');}
 function renderTopicKeys(){
   const cases=DATA.keys[st.curTopic.id]||[];
-  const box=document.getElementById('tab-ky');
-  box.innerHTML=cases.length?cases.map((c,i)=>keysHtml(c,`tk${i}`)).join(''):'<p style="color:var(--muted)">Keyslar yo\'q</p>';
+  document.getElementById('tab-ky').innerHTML=cases.length?cases.map((c,i)=>keysHtml(c,`tk${i}`)).join(''):'<p style="color:var(--muted)">Keyslar yo\'q</p>';
 }
 
-// ===== ANKI ENGINE =====
+// =================== MY KONSPEKT ===================
+let currentEditId=null;
+function openEditor(id=null){
+  currentEditId=id;
+  document.getElementById('mkList').style.display='none';
+  document.getElementById('mkEditor').style.display='block';
+  document.getElementById('mkView').style.display='none';
+  document.getElementById('editorLabel').textContent=id?'Konspektni tahrirlash':'Yangi konspekt';
+  document.getElementById('deleteKBtn').style.display=id?'block':'none';
+  if(id){
+    const k=st.myKonspekts.find(k=>k.id===id);
+    document.getElementById('edTitle').value=k.title;
+    document.getElementById('edArea').value=k.content;
+    document.getElementById('edTopic').value=k.topic||'';
+  } else {
+    document.getElementById('edTitle').value='';
+    document.getElementById('edArea').value='';
+    document.getElementById('edTopic').value='';
+  }
+  setEdView('edit');
+}
+function closeEditor(){
+  document.getElementById('mkList').style.display='block';
+  document.getElementById('mkEditor').style.display='none';
+  renderMyK();
+}
+function setEdView(mode){
+  const area=document.getElementById('edArea'),prev=document.getElementById('edPreview');
+  const tb=document.getElementById('edToolbar');
+  const eb=document.getElementById('editViewBtn'),pb=document.getElementById('preViewBtn');
+  if(mode==='edit'){
+    area.style.display='block';prev.style.display='none';tb.style.display='flex';
+    eb.style.borderColor='var(--accent)';eb.style.color='var(--accent)';
+    pb.style.borderColor='';pb.style.color='';
+  } else {
+    area.style.display='none';prev.style.display='block';tb.style.display='none';
+    prev.innerHTML=mdToHtml(area.value);
+    pb.style.borderColor='var(--accent)';pb.style.color='var(--accent)';
+    eb.style.borderColor='';eb.style.color='';
+  }
+}
+function fmt(before,after){
+  const t=document.getElementById('edArea');
+  const s=t.selectionStart,e=t.selectionEnd,v=t.value;
+  const sel=v.substring(s,e)||'matn';
+  t.value=v.substring(0,s)+before+sel+after+v.substring(e);
+  t.focus();t.selectionStart=s+before.length;t.selectionEnd=s+before.length+sel.length;
+}
+function fmtLine(prefix){
+  const t=document.getElementById('edArea');
+  const s=t.selectionStart,v=t.value;
+  const lineStart=v.lastIndexOf('\n',s-1)+1;
+  t.value=v.substring(0,lineStart)+prefix+v.substring(lineStart);
+  t.focus();t.selectionStart=t.selectionEnd=s+prefix.length;
+}
+function saveMyK(){
+  const title=document.getElementById('edTitle').value.trim();
+  const content=document.getElementById('edArea').value.trim();
+  if(!title){alert('Sarlavha kiriting!');return;}
+  if(!content){alert('Kontent kiriting!');return;}
+  const topic=document.getElementById('edTopic').value;
+  if(currentEditId){
+    const idx=st.myKonspekts.findIndex(k=>k.id===currentEditId);
+    if(idx>=0) st.myKonspekts[idx]={...st.myKonspekts[idx],title,content,topic,updated:new Date().toLocaleDateString('uz-UZ')};
+  } else {
+    st.myKonspekts.unshift({id:Date.now(),title,content,topic,created:new Date().toLocaleDateString('uz-UZ'),updated:new Date().toLocaleDateString('uz-UZ')});
+  }
+  save();closeEditor();
+}
+function deleteMyK(){
+  if(!confirm('Bu konspektni o\'chirish?'))return;
+  st.myKonspekts=st.myKonspekts.filter(k=>k.id!==currentEditId);
+  save();closeEditor();
+}
+function renderMyK(){
+  const search=document.getElementById('mkSearch')?.value.toLowerCase()||'';
+  const filter=document.getElementById('mkFilter')?.value||'';
+  let list=st.myKonspekts;
+  if(search)list=list.filter(k=>k.title.toLowerCase().includes(search)||k.content.toLowerCase().includes(search));
+  if(filter)list=list.filter(k=>k.topic==filter);
+  const box=document.getElementById('mkListItems');
+  const empty=document.getElementById('mkEmpty');
+  if(!list.length){box.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  box.innerHTML=list.map(k=>{
+    const topicName=k.topic?TOPICS.find(t=>t.id==k.topic)?.name:'';
+    return `<div class="my-k-card" onclick="viewMyK(${k.id})">
+      <div class="my-k-actions">
+        <button class="icon-btn" onclick="event.stopPropagation();openEditor(${k.id})" title="Tahrirlash">✏️</button>
+        <button class="icon-btn" onclick="event.stopPropagation();if(confirm('O\\'chirish?')){st.myKonspekts=st.myKonspekts.filter(x=>x.id!==${k.id});save();renderMyK()}" title="O'chirish">🗑</button>
+      </div>
+      <div class="my-k-title">${k.title}</div>
+      <div class="my-k-preview">${k.content}</div>
+      <div class="my-k-meta">
+        <span class="my-k-date">${k.updated||k.created}</span>
+        ${topicName?`<span class="my-k-topic-tag">${topicName.substring(0,30)}...</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+function viewMyK(id){
+  const k=st.myKonspekts.find(k=>k.id===id);
+  if(!k)return;
+  document.getElementById('mkList').style.display='none';
+  document.getElementById('mkEditor').style.display='none';
+  document.getElementById('mkView').style.display='block';
+  document.getElementById('mkViewTitle').textContent=k.title;
+  document.getElementById('mkViewContent').innerHTML=mdToHtml(k.content);
+  document.getElementById('mkEditBtn').onclick=()=>openEditor(id);
+}
+function editFromView(){
+  const title=document.getElementById('mkViewTitle').textContent;
+  const k=st.myKonspekts.find(k=>k.title===title);
+  if(k)openEditor(k.id);
+}
+function mdToHtml(md){
+  return md
+    .replace(/###\s(.+)/g,'<h3 style="font-family:Syne,sans-serif;color:var(--accent);margin:1rem 0 .4rem">$1</h3>')
+    .replace(/##\s(.+)/g,'<h3 style="font-family:Syne,sans-serif;color:var(--accent);margin:1rem 0 .4rem">$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--accent3)">$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/^>\s(.+)/gm,'<div style="border-left:3px solid var(--accent);padding:.5rem .8rem;background:rgba(99,179,237,.08);border-radius:0 6px 6px 0;margin:.4rem 0;font-size:.88rem;color:#cbd5e0">$1</div>')
+    .replace(/^---$/gm,'<hr style="border:none;border-top:1px solid var(--border);margin:.8rem 0">')
+    .replace(/^-\s(.+)/gm,'<div style="padding:2px 0;font-size:.89rem;color:#cbd5e0">• $1</div>')
+    .replace(/\n\n/g,'</p><p style="margin-bottom:.5rem">')
+    .replace(/^(?!<)/gm,'<p style="font-size:.9rem;color:#cbd5e0;line-height:1.8;margin-bottom:.4rem">');
+}
+
+// =================== ANKI ENGINE ===================
 let ankiState={cards:[],idx:0,flipped:false,prefix:''};
 function renderAnkiCards(container,cards,prefix){
   if(!cards.length){container.innerHTML='<p style="color:var(--muted);padding:1rem">Kartochkalar yo\'q</p>';return;}
-  ankiState={cards,idx:0,flipped:false,prefix};
-  drawCard(container,prefix);
+  ankiState={cards,idx:0,flipped:false,prefix};drawCard(container,prefix);
 }
 function drawCard(container,prefix){
-  const {cards,idx,flipped}=ankiState;
-  const c=cards[idx];
+  const{cards,idx,flipped}=ankiState,c=cards[idx];
   container.innerHTML=`
-    <div class="card-counter">${idx+1} / ${cards.length} kartochka</div>
+    <div class="card-counter">${idx+1} / ${cards.length}</div>
     <div class="flashcard ${flipped?'flipped':''}" onclick="flipAnki('${prefix}')">
       <div class="flashcard-inner">
-        <div class="card-face front">
-          <div class="card-label">❓ SAVOL</div>
-          <div class="card-q">${c.q}</div>
-          <div class="card-hint">Javobni ko'rish uchun bosing</div>
-        </div>
-        <div class="card-face back">
-          <div class="card-label">✅ JAVOB</div>
-          <div class="card-a">${c.a}</div>
-        </div>
+        <div class="card-face front"><div class="card-label">❓ SAVOL</div><div class="card-q">${c.q}</div><div class="card-hint">Bosing → javob</div></div>
+        <div class="card-face back"><div class="card-label">✅ JAVOB</div><div class="card-a">${c.a}</div></div>
       </div>
     </div>
     ${flipped?`<div class="rating-row">
-      <button class="anki-btn btn-red" onclick="nextAnki(false,'${prefix}')">😕 Bilmadim</button>
-      <button class="anki-btn btn-orange" onclick="nextAnki(true,'${prefix}')">🤔 Qiyin</button>
-      <button class="anki-btn btn-green" onclick="nextAnki(true,'${prefix}')">✅ Bildim!</button>
+      <button class="btn btn-red btn-sm" onclick="nextAnki(false,'${prefix}')">😕 Bilmadim</button>
+      <button class="btn btn-orange btn-sm" onclick="nextAnki(true,'${prefix}')">🤔 Qiyin</button>
+      <button class="btn btn-green btn-sm" onclick="nextAnki(true,'${prefix}')">✅ Bildim!</button>
     </div>`:''}`;
 }
 function flipAnki(p){ankiState.flipped=!ankiState.flipped;drawCard(getBox(p),p);}
 function nextAnki(knew,p){
-  if(knew){st.studied++;save();recordStudy();}
-  ankiState.idx++; ankiState.flipped=false;
+  if(knew){st.studied++;st.todayCards++;save();recordStudy();}
+  ankiState.idx++;ankiState.flipped=false;
   const box=getBox(p);
   if(ankiState.idx>=ankiState.cards.length){
-    box.innerHTML=`<div class="finish-box"><div style="font-size:2.5rem;margin-bottom:1rem">🎉</div>
-      <div style="font-size:1.1rem;font-weight:700">Barcha kartochkalar tugatildi!</div>
-      <div style="color:var(--muted);margin:.5rem 0 1.5rem">Ajoyib!</div>
-      <button class="anki-btn btn-blue" onclick="ankiState.idx=0;ankiState.flipped=false;drawCard(getBox('${p}'),'${p}')">Qaytadan</button></div>`;
-    return;
+    box.innerHTML=`<div class="finish-box"><div style="font-size:2.5rem;margin-bottom:.8rem">🎉</div>
+      <div style="font-size:1.1rem;font-weight:700">Barcha kartochkalar!</div>
+      <div style="color:var(--muted);margin:.4rem 0 1.2rem">Zo'r!</div>
+      <button class="btn btn-blue" onclick="ankiState.idx=0;ankiState.flipped=false;drawCard(getBox('${p}'),'${p}')">Qaytadan</button></div>`;return;
   }
   drawCard(box,p);
 }
-function getBox(p){
-  if(p==='ta') return document.getElementById('tab-a');
-  if(p==='ga') return document.getElementById('ankiArea');
-  return document.getElementById('tab-a');
-}
+function getBox(p){return document.getElementById(p==='ta'?'tab-a':'ankiArea');}
 function startGlobalAnki(){
   const sel=document.getElementById('ankiSel').value;
   let cards=[];
-  if(sel){cards=DATA.anki[parseInt(sel)]||[];}
-  else{TOPICS.forEach(t=>{(DATA.anki[t.id]||[]).forEach(c=>cards.push(c));});for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}}
+  if(sel)cards=DATA.anki[parseInt(sel)]||[];
+  else{TOPICS.forEach(t=>{(DATA.anki[t.id]||[]).forEach(c=>cards.push(c));});cards.sort(()=>Math.random()-.5);}
   renderAnkiCards(document.getElementById('ankiArea'),cards,'ga');
 }
 
-// ===== KEYS =====
+// =================== KEYS ===================
 function keysHtml(c,uid){
-  const badge=c.d==='q'?'q':c.d==='o'?'o':'os';
-  const bLabel=c.d==='q'?'QIYIN':c.d==='o'?"O'RTA":'OSON';
-  return `<div class="keys-card">
-    <span class="keys-badge badge-${badge}">${bLabel}</span>
-    <div class="keys-title">${c.t}</div>
+  const b=c.d==='q'?'q':c.d==='o'?'o':'os',bl=c.d==='q'?'QIYIN':c.d==='o'?"O'RTA":'OSON';
+  return `<div class="keys-card"><span class="keys-badge badge-${b}">${bl}</span>
+    <div style="font-weight:700;font-size:.9rem;margin-bottom:7px">${c.t}</div>
     <div class="keys-scenario">${c.s}</div>
-    <div class="keys-question">❓ ${c.q}</div>
+    <div class="keys-q">❓ ${c.q}</div>
     <button class="reveal-btn" onclick="toggleKey('${uid}',this)">Javobni ko'rish →</button>
     <div class="keys-answer" id="ka-${uid}">✅ ${c.a}</div>
   </div>`;
@@ -772,172 +1003,116 @@ function showGlobalKeys(){
   const sel=document.getElementById('keysSel').value;
   const box=document.getElementById('keysArea');
   let cases=[];
-  if(sel){cases=DATA.keys[parseInt(sel)]||[];}
-  else{TOPICS.forEach(t=>{(DATA.keys[t.id]||[]).forEach(c=>cases.push(c));});}
-  box.innerHTML=cases.length?cases.map((c,i)=>keysHtml(c,`gk${i}`)).join(''):'<p style="color:var(--muted)">Keyslar topilmadi</p>';
+  if(sel)cases=DATA.keys[parseInt(sel)]||[];
+  else TOPICS.forEach(t=>{(DATA.keys[t.id]||[]).forEach(c=>cases.push(c));});
+  box.innerHTML=cases.length?cases.map((c,i)=>keysHtml(c,`gk${i}`)).join(''):'<p style="color:var(--muted)">Topilmadi</p>';
 }
 
-// ===== EXAM ENGINE =====
-let exam={questions:[],answers:[],cur:0,timeLeft:0,timer:null,started:false};
-
-function buildExamQuestions(){
+// =================== EXAM ===================
+let exam={questions:[],answers:[],cur:0,timeLeft:0,timer:null};
+function buildQ(){
   let pool=[];
-  TOPICS.forEach(t=>{
-    (DATA.anki[t.id]||[]).forEach(c=>{
-      // Convert anki to MCQ
-      const q=c.q, correct=c.a;
-      // Generate 3 wrong answers from other cards
-      const others=[];
-      TOPICS.forEach(t2=>{(DATA.anki[t2.id]||[]).forEach(c2=>{if(c2.a!==correct) others.push(c2.a);});});
-      const shuffled=others.sort(()=>Math.random()-.5).slice(0,3);
-      const opts=[correct,...shuffled].sort(()=>Math.random()-.5);
-      pool.push({q,opts,correct,topic:t.name});
-    });
-  });
+  TOPICS.forEach(t=>{(DATA.anki[t.id]||[]).forEach(c=>{
+    const others=[];TOPICS.forEach(t2=>{(DATA.anki[t2.id]||[]).forEach(c2=>{if(c2.a!==c.a)others.push(c2.a);});});
+    const opts=[c.a,...others.sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);
+    pool.push({q:c.q,opts,correct:c.a,topic:t.name});
+  });});
   return pool.sort(()=>Math.random()-.5);
 }
-
 function startExam(){
   const count=parseInt(document.getElementById('examCount').value);
   const mins=parseInt(document.getElementById('examTime').value);
-  const topicSel=document.getElementById('examTopic').value;
-  
-  let pool=buildExamQuestions();
-  if(topicSel){
-    const t=TOPICS.find(tp=>tp.id===parseInt(topicSel));
-    if(t) pool=pool.filter(q=>q.topic===t.name);
-  }
-  
+  const ts=document.getElementById('examTopic').value;
+  let pool=buildQ();
+  if(ts){const t=TOPICS.find(tp=>tp.id===parseInt(ts));if(t)pool=pool.filter(q=>q.topic===t.name);}
   exam.questions=pool.slice(0,count);
   exam.answers=new Array(count).fill(null);
-  exam.cur=0;
-  exam.timeLeft=mins*60;
-  exam.started=true;
-  
+  exam.cur=0;exam.timeLeft=mins*60;
   document.getElementById('examSetup').style.display='none';
   document.getElementById('examArea').style.display='block';
-  
-  exam.timer=setInterval(()=>{
-    exam.timeLeft--;
-    renderExamHeader();
-    if(exam.timeLeft<=0){finishExam();}
-  },1000);
-  
-  renderExamQuestion();
+  exam.timer=setInterval(()=>{exam.timeLeft--;renderExamHdr();if(exam.timeLeft<=0)finishExam();},1000);
+  renderExamQ();
 }
-
-function renderExamHeader(){
-  const mins=Math.floor(exam.timeLeft/60);
-  const secs=exam.timeLeft%60;
-  const timeStr=`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+function renderExamHdr(){
+  const m=Math.floor(exam.timeLeft/60),s=exam.timeLeft%60;
+  const ts=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   const cl=exam.timeLeft<60?'danger':exam.timeLeft<300?'warn':'';
-  const eh=document.getElementById('examHeader');
-  if(eh){
-    eh.querySelector('.timer-display').className=`timer-display ${cl}`;
-    eh.querySelector('.timer-display').textContent=timeStr;
-    eh.querySelector('.exam-progress').textContent=`${exam.cur+1} / ${exam.questions.length} savol`;
-  }
+  const h=document.getElementById('examHdr');
+  if(h){h.querySelector('.timer-display').className=`timer-display ${cl}`;h.querySelector('.timer-display').textContent=ts;h.querySelector('.exam-prog').textContent=`${exam.cur+1}/${exam.questions.length}`;}
 }
-
-function renderExamQuestion(){
+function renderExamQ(){
   const box=document.getElementById('examArea');
   const q=exam.questions[exam.cur];
-  const mins=Math.floor(exam.timeLeft/60);
-  const secs=exam.timeLeft%60;
-  const timeStr=`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+  const m=Math.floor(exam.timeLeft/60),s=exam.timeLeft%60;
+  const ts=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   const cl=exam.timeLeft<60?'danger':exam.timeLeft<300?'warn':'';
-  
   box.innerHTML=`
-    <div class="exam-header" id="examHeader">
-      <div>
-        <div class="timer-display ${cl}">${timeStr}</div>
-        <div style="font-size:.75rem;color:var(--muted)">Qolgan vaqt</div>
-      </div>
-      <div class="exam-progress">${exam.cur+1} / ${exam.questions.length} savol</div>
-      <div style="display:flex;gap:8px">
-        <button class="anki-btn btn-ghost" onclick="finishExam()">Yakunlash</button>
-      </div>
+    <div class="exam-header" id="examHdr">
+      <div><div class="timer-display ${cl}">${ts}</div><div style="font-size:.72rem;color:var(--muted)">Qolgan vaqt</div></div>
+      <div class="exam-prog" style="font-size:.85rem;color:var(--muted)">${exam.cur+1}/${exam.questions.length}</div>
+      <button class="btn btn-ghost btn-sm" onclick="finishExam()">Yakunlash</button>
     </div>
     <div class="exam-q-card">
-      <div class="exam-q-num">SAVOL ${exam.cur+1}</div>
-      <div class="exam-q-text">${q.q}</div>
-      <div class="exam-options">
-        ${q.opts.map((opt,i)=>`<button class="exam-option ${exam.answers[exam.cur]===opt?'selected':''}" onclick="selectAnswer('${opt.replace(/'/g,"\\'")}')">
-          <span style="font-family:'JetBrains Mono',monospace;font-size:.75rem;margin-right:8px;color:var(--muted)">${String.fromCharCode(65+i)}.</span>${opt}
-        </button>`).join('')}
-      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:.4rem">SAVOL ${exam.cur+1}</div>
+      <div style="font-size:.98rem;font-weight:600;line-height:1.5;margin-bottom:1rem">${q.q}</div>
+      ${q.opts.map((opt,i)=>`<button class="exam-option ${exam.answers[exam.cur]===opt?'selected':''}" onclick="selAns('${opt.replace(/'/g,"\\'")}')">${String.fromCharCode(65+i)}. ${opt}</button>`).join('')}
     </div>
-    <div class="exam-nav">
-      <button class="anki-btn btn-ghost" onclick="examNav(-1)" ${exam.cur===0?'disabled':''}>← Oldingi</button>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
-        ${exam.questions.map((_,i)=>`<button onclick="exam.cur=${i};renderExamQuestion()" style="width:32px;height:32px;border-radius:8px;border:1px solid ${exam.answers[i]?'rgba(104,211,145,.5)':'var(--border)'};background:${exam.answers[i]?'rgba(104,211,145,.15)':'var(--surface2)'};color:${i===exam.cur?'var(--accent)':'var(--text)'};font-size:.75rem;cursor:pointer;font-family:'JetBrains Mono',monospace">${i+1}</button>`).join('')}
-      </div>
-      ${exam.cur<exam.questions.length-1?
-        `<button class="anki-btn btn-blue" onclick="examNav(1)">Keyingi →</button>`:
-        `<button class="anki-btn btn-green" onclick="finishExam()">✅ Yakunlash</button>`
-      }
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:.8rem">
+      <button class="btn btn-ghost btn-sm" onclick="examNav(-1)" ${exam.cur===0?'disabled':''}>← Oldingi</button>
+      ${exam.cur<exam.questions.length-1?`<button class="btn btn-blue btn-sm" onclick="examNav(1)">Keyingi →</button>`:`<button class="btn btn-green btn-sm" onclick="finishExam()">✅ Yakunlash</button>`}
+    </div>
+    <div style="display:flex;gap:4px;flex-wrap:wrap">
+      ${exam.questions.map((_,i)=>`<button onclick="exam.cur=${i};renderExamQ()" style="width:28px;height:28px;border-radius:6px;border:1px solid ${exam.answers[i]?'rgba(104,211,145,.5)':'var(--border)'};background:${exam.answers[i]?'rgba(104,211,145,.15)':'var(--surface2)'};color:${i===exam.cur?'var(--accent)':'var(--text)'};font-size:.7rem;cursor:pointer">${i+1}</button>`).join('')}
     </div>`;
 }
-
-function selectAnswer(opt){
-  exam.answers[exam.cur]=opt;
-  renderExamQuestion();
-}
-function examNav(d){
-  exam.cur=Math.max(0,Math.min(exam.questions.length-1,exam.cur+d));
-  renderExamQuestion();
-}
-
+function selAns(opt){exam.answers[exam.cur]=opt;renderExamQ();}
+function examNav(d){exam.cur=Math.max(0,Math.min(exam.questions.length-1,exam.cur+d));renderExamQ();}
 function finishExam(){
-  if(exam.timer) clearInterval(exam.timer);
-  
+  if(exam.timer)clearInterval(exam.timer);
   let correct=0,wrongList=[];
   exam.questions.forEach((q,i)=>{
-    if(exam.answers[i]===q.correct) correct++;
+    if(exam.answers[i]===q.correct)correct++;
     else wrongList.push({q:q.q,yours:exam.answers[i]||'Javob yo\'q',correct:q.correct});
   });
-  
   const pct=Math.round(correct/exam.questions.length*100);
   const grade=pct>=90?'A':pct>=80?'B':pct>=70?'C':pct>=60?'D':'F';
-  const gradeColor=pct>=70?'var(--accent2)':pct>=50?'var(--accent3)':'var(--danger)';
-  
-  // Save to history
+  const gc=pct>=70?'var(--accent2)':pct>=50?'var(--accent3)':'var(--danger)';
   st.examHistory.unshift({date:new Date().toLocaleDateString('uz-UZ'),score:pct,correct,total:exam.questions.length,grade});
-  if(st.examHistory.length>10) st.examHistory.pop();
+  if(st.examHistory.length>10)st.examHistory.pop();
   save();
-  
-  const box=document.getElementById('examArea');
-  box.innerHTML=`
+  document.getElementById('examArea').innerHTML=`
     <div class="result-card">
-      <div style="font-size:1rem;color:var(--muted);margin-bottom:.5rem">Imtihon natijasi</div>
-      <div class="result-score" style="color:${gradeColor}">${pct}%</div>
-      <div class="result-grade" style="color:${gradeColor}">Baho: ${grade}</div>
-      <div style="font-size:.88rem;color:var(--muted)">${correct} ta to'g'ri / ${exam.questions.length} ta savol</div>
+      <div style="font-size:.9rem;color:var(--muted)">Imtihon natijasi</div>
+      <div class="result-score" style="color:${gc}">${pct}%</div>
+      <div style="font-size:1.1rem;font-weight:600;color:${gc}">Baho: ${grade}</div>
+      <div style="font-size:.85rem;color:var(--muted)">${correct} / ${exam.questions.length} to'g'ri</div>
       <div class="result-stats">
         <div class="r-stat"><div class="r-stat-num" style="color:var(--accent2)">${correct}</div><div class="r-stat-label">To'g'ri</div></div>
         <div class="r-stat"><div class="r-stat-num" style="color:var(--danger)">${exam.questions.length-correct}</div><div class="r-stat-label">Xato</div></div>
         <div class="r-stat"><div class="r-stat-num" style="color:var(--accent)">${exam.answers.filter(a=>a).length}</div><div class="r-stat-label">Javoblangan</div></div>
       </div>
     </div>
-    ${wrongList.length?`
-    <div class="section-title">Xato javoblar (${wrongList.length} ta)</div>
-    <div class="wrong-list">
-      ${wrongList.map(w=>`<div class="wrong-item">
-        <div class="wq">❓ ${w.q}</div>
-        <div style="color:var(--danger);font-size:.8rem;margin-bottom:2px">Sizning: ${w.yours}</div>
-        <div class="wa">✅ To'g'ri: ${w.correct}</div>
-      </div>`).join('')}
-    </div>`:''
-    }
+    ${wrongList.length?`<div class="sec-title">Xato javoblar</div>
+    <div class="wrong-list">${wrongList.map(w=>`<div class="wrong-item">
+      <div style="color:var(--text);margin-bottom:2px">❓ ${w.q}</div>
+      <div style="color:var(--danger);font-size:.78rem">Sizning: ${w.yours}</div>
+      <div style="color:var(--accent2);font-size:.8rem">✅ ${w.correct}</div>
+    </div>`).join('')}</div>`:''}
     <div style="display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap">
-      <button class="anki-btn btn-blue" onclick="document.getElementById('examSetup').style.display='block';document.getElementById('examArea').style.display='none'">Qayta urinish</button>
-      <button class="anki-btn btn-ghost" onclick="show('progress')">📊 Progressni ko'rish</button>
+      <button class="btn btn-blue" onclick="document.getElementById('examSetup').style.display='block';document.getElementById('examArea').style.display='none'">Qayta</button>
+      <button class="btn btn-ghost" onclick="show('dashboard')">📊 Dashboard</button>
     </div>`;
 }
 
-// ===== PROGRESS =====
-function renderProgress(){
-  const bars=document.getElementById('progressBars');
+// =================== PROFILE ===================
+function renderProfile(){
+  applyProfile();
+  document.getElementById('ps1').textContent=st.done.length;
+  document.getElementById('ps2').textContent=st.studied;
+  let cnt=0,d=new Date();while(true){const ds=d.toISOString().split('T')[0];if(st.streak.includes(ds)){cnt++;d.setDate(d.getDate()-1);}else break;}
+  document.getElementById('ps3').textContent=cnt;
+  document.getElementById('ps4').textContent=st.examHistory.length;
+  const bars=document.getElementById('profileBars');
   bars.innerHTML=TOPICS.map(t=>{
     const pct=st.done.includes(t.id)?100:0;
     return `<div class="progress-row">
@@ -946,121 +1121,142 @@ function renderProgress(){
       <div class="progress-pct">${pct}%</div>
     </div>`;
   }).join('');
-  document.getElementById('doneCount').textContent=st.done.length;
-  document.getElementById('studiedCount').textContent=st.studied;
-  document.getElementById('pctCount').textContent=Math.round(st.done.length/23*100)+'%';
-  
-  // Notif toggle state
   const nt=document.getElementById('dailyNotif');
-  if(nt) nt.checked=localStorage.getItem('n_notif')==='1';
-  
-  // Exam history
-  const eh=document.getElementById('examHistory');
-  if(eh&&st.examHistory.length){
-    eh.innerHTML=`<div class="section-title" style="margin-top:1.5rem">Imtihon tarixi</div>`+
-    st.examHistory.map(e=>`<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center">
-      <div><div style="font-weight:600">${e.grade} — ${e.score}%</div><div style="font-size:.78rem;color:var(--muted)">${e.correct}/${e.total} to'g'ri • ${e.date}</div></div>
-      <div style="font-size:1.5rem">${e.score>=70?'✅':e.score>=50?'⚠️':'❌'}</div>
-    </div>`).join('');
-  }
+  if(nt)nt.checked=localStorage.getItem('n_notif')==='1';
+}
+function applyProfile(){
+  const p=st.profile;
+  const initials=(p.name||'F').charAt(0).toUpperCase();
+  const ava=document.getElementById('profileAva');
+  const aBtn=document.getElementById('avatarBtn');
+  if(p.ava&&p.ava!=='gradient'){ava.textContent=p.ava;aBtn.textContent=p.ava;}
+  else{ava.textContent=initials;aBtn.textContent=initials;}
+  document.getElementById('profileName').textContent=p.name||'Foydalanuvchi';
+  document.getElementById('profileTitle').textContent=p.title||'Tibbiyot talabaси';
+}
+function openProfileEdit(){
+  document.getElementById('profileView').style.display='none';
+  document.getElementById('profileEditForm').style.display='block';
+  document.getElementById('pfName').value=st.profile.name||'';
+  document.getElementById('pfTitle').value=st.profile.title||'';
+  st.selAva=st.profile.ava||'gradient';
+  document.querySelectorAll('.ava-opt').forEach(o=>{o.classList.toggle('selected',o.getAttribute('onclick').includes(`'${st.selAva}'`));});
+}
+function closeProfileEdit(){
+  document.getElementById('profileView').style.display='block';
+  document.getElementById('profileEditForm').style.display='none';
+}
+function selectAva(el,val){
+  st.selAva=val;
+  document.querySelectorAll('.ava-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function saveProfile(){
+  st.profile.name=document.getElementById('pfName').value.trim()||'Foydalanuvchi';
+  st.profile.title=document.getElementById('pfTitle').value.trim()||'Tibbiyot talabaси';
+  st.profile.ava=st.selAva||'gradient';
+  save();applyProfile();closeProfileEdit();renderDashboard();
+}
+function toggleNotif(el){
+  if(el.checked){
+    if('Notification' in window){Notification.requestPermission().then(p=>{if(p==='granted'){localStorage.setItem('n_notif','1');}else el.checked=false;});}
+  } else localStorage.removeItem('n_notif');
 }
 
-// ===== SELECTS =====
+// =================== RENDER ALL ===================
+function renderAll(){
+  updateBadge();applyProfile();renderDashboard();pomoRender();
+}
+
+// =================== SELECTS ===================
 function populateSelects(){
-  ['ankiSel','keysSel','examTopic'].forEach(id=>{
-    const sel=document.getElementById(id);
-    if(!sel) return;
-    TOPICS.forEach(t=>{
-      const o=document.createElement('option');
-      o.value=t.id; o.textContent=`${t.id}. ${t.name.substring(0,42)}`;
-      sel.appendChild(o);
-    });
+  ['ankiSel','keysSel','examTopic','mkFilter','edTopic'].forEach(id=>{
+    const sel=document.getElementById(id);if(!sel)return;
+    TOPICS.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=`${t.id}. ${t.name.substring(0,40)}`;sel.appendChild(o);});
   });
 }
 
-// ===== DATA =====
+// =================== DATA ===================
 const DATA={
   konspekt:{
-    1:`<h3>Nerv to'qimasining tuzilishi</h3><p>Nerv to'qimasi <strong>neyronlar</strong> va <strong>glial hujayralar</strong>dan iborat. Neyron — asosiy tarkibiy va funksional birlik.</p><h3>Neyronning tuzilishi</h3><ul><li><strong>Soma</strong> — yadro va organoidlar</li><li><strong>Dendritlar</strong> — impulsni somaga olib keladi</li><li><strong>Akson</strong> — impulsni somadan uzoqlashtiради</li><li><strong>Sinaps</strong> — neyronlar orasidagi ulanish</li></ul><h3>Neyron turlari</h3><ul><li><strong>Afferent</strong> — periferiyadan markazga</li><li><strong>Efferent</strong> — markazdan periferiyaga</li><li><strong>Assotsiativ</strong> — markaz ichida</li><li>Unipolar, Bipolar, Multipolar</li></ul><div class="highlight"><strong>Eslab qoling:</strong> Neyronlar mitoz yo'li bilan bo'linmaydi. Faqat aksonal regeneratsiya mumkin.</div>`,
-    2:`<h3>Glial to'qimalar</h3><p>Neyroglialar neyronlarga <strong>10 marta ko'p</strong>. Qo'llash, himoya, oziqlantirishda ishtirok etadi.</p><h3>Glial hujayra turlari</h3><ul><li><strong>Astrotsitlar</strong> — qon-miya to'sig'i, K⁺ regulyatsiyasi</li><li><strong>Oligodendrotsitlar</strong> — MNS da mielin</li><li><strong>Shvann hujayralari</strong> — PNS da mielin</li><li><strong>Mikroglia</strong> — fagotsitoz, immunitet</li><li><strong>Ependimal hujayralar</strong> — qorinchalar, BOM</li></ul><div class="highlight"><strong>Klinik:</strong> Multiple skleroz — MNS da demielinizatsiya (oligodendrotsitlar). Giyyen-Barre — PNS da demielinizatsiya (Shvann hujayralari).</div>`,
-    3:`<h3>Orqa miya anatomiyasi</h3><p>Foramen magnumdan <strong>L1-L2</strong> vertebragacha. 31 juft nerv ildizi.</p><h3>Segmentar tuzilishi</h3><ul><li>Servikal: C1-C8 (8)</li><li>Torakal: T1-T12 (12)</li><li>Lumbar: L1-L5 (5)</li><li>Sakral: S1-S5 (5)</li></ul><h3>Muhim darajalar</h3><ul><li><strong>C3-C5</strong> — diafragma (phrenic nerve)</li><li><strong>C5-T1</strong> — qo'l (brachial plexus)</li><li><strong>L2-S2</strong> — oyoq (lumbosacral plexus)</li><li><strong>S2-S4</strong> — siydik pufagi, to'g'ri ichak</li></ul><div class="highlight">Dermatom xaritasini bilish — topik diagnostikaning asosi.</div>`,
-    4:`<h3>Oq modda va o'tkazuv yo'llari</h3><ul><li><strong>Corticospinalis</strong> — ixtiyoriy harakat, medullada chatishadi</li><li><strong>Spinothalamicus lateralis</strong> — og'riq, harorat, orqa miyada chatishadi</li><li><strong>Fasciculus gracilis/cuneatus</strong> — vibrasiya, propriotseptsiya, medullada chatishadi</li><li><strong>Spinocerebellaris</strong> — miyachaga propriotseptsiya</li></ul><div class="highlight"><strong>Brown-Séquard:</strong> Ipsilateral harakat + kontralateral og'riq/harorat yo'qolishi.</div>`,
-    5:`<h3>Kulrang modda — Rexed plastinkalari</h3><ul><li><strong>I-II</strong> — og'riq, harorat (substantia gelatinosa)</li><li><strong>III-IV</strong> — epikritik sezgi</li><li><strong>VII</strong> — avtonom neyronlar (C8-L2)</li><li><strong>IX</strong> — alpha, gamma motor neyronlar</li></ul><h3>Old shox</h3><ul><li>Alpha motor — muskul tolalari</li><li>Gamma motor — muskul dukchalar</li><li>Renshaw — tormozlovchi interneyron</li></ul>`,
-    6:`<h3>Sezgi sistemasi — 3 neyronli zanjir</h3><h3>Og'riq/harorat yo'li</h3><ul><li>1-neyron: Orqa miya ganglioni</li><li>2-neyron: Orqa shox → old kommissura → lateral funiculus → thalamus</li><li>3-neyron: Thalamus → postsentral girus</li></ul><h3>Chuqur sezgi (lemniscal)</h3><ul><li>1-neyron: Orqa miya ganglioni → ipsilateral orqa kanat</li><li>2-neyron: Medulla → chatishadi → medial lemniscus → thalamus</li><li>3-neyron: Thalamus → postsentral girus</li></ul>`,
-    7:`<h3>Sezgi buzilishlari</h3><ul><li><strong>Anesteziya</strong> — to'liq yo'qolish</li><li><strong>Gipesteziya</strong> — kamayish</li><li><strong>Giperesteziya</strong> — kuchayish</li><li><strong>Paresteziya</strong> — o'z-o'zidan sezgi</li><li><strong>Allodinia</strong> — og'riqsiz ta'sirdan og'riq</li></ul><h3>Tekshirish</h3><ul><li>Og'riq — igna uchi</li><li>Vibrasiya — 128 Hz kamerton</li><li>Propriotseptsiya — barmoqni passiv harakat</li><li>Stereognoziya — predmetni tanish</li></ul>`,
-    8:`<h3>Harakat sistemasi</h3><h3>MHN vs PHN</h3><ul><li><strong>MHN zararlanishi</strong>: Spastik falaj, klonus, Babinski (+), giperrefleksiya</li><li><strong>PHN zararlanishi</strong>: Flaccid falaj, atrofiya, fassikulatsiya, arefleksiya</li></ul><h3>Piramidal sistema</h3><ul><li>Corticospinalis — tanaga</li><li>Corticobulbaris — kranial nervlar yadrolariga</li></ul>`,
-    9:`<h3>MRC Shkala</h3><ul><li>0 — harakat yo'q</li><li>1 — qisqarish bor, harakat yo'q</li><li>2 — gravitatsiyasiz harakat</li><li>3 — gravitatsiyaga qarshi</li><li>4 — qarshilikka qisman</li><li>5 — normal</li></ul><h3>Reflekslar</h3><ul><li>Tizza — L3-L4</li><li>Achilles — S1-S2</li><li>Biceps — C5-C6</li></ul><h3>Harakat buzilishlari</h3><ul><li>Monoplegia, Hemiplegia, Paraplegia, Tetraplegia</li></ul>`,
-    10:`<h3>XII-juft: N. Hypoglossus</h3><p>Til muskullarini innervatsiya qiladi.</p><ul><li>Yadro: Medullada nucl. n. hypoglossi</li><li>Canalis hypoglossi orqali chiqadi</li></ul><h3>Tekshirish</h3><ul><li>Tilni tashqariga chiqarish — zararlangan tomonga og'adi</li></ul><h3>Zararlanish</h3><ul><li><strong>Periferik</strong>: Ipsilateral falaj, atrofiya, fassikulatsiya</li><li><strong>Markaziy</strong>: Kontralateral parezis, atrofiya yo'q</li></ul><div class="highlight">Til zararlangan tomonga og'adi.</div>`,
-    11:`<h3>XI-juft: N. Accessorius</h3><p>M. sternocleidomastoideus va m. trapezius.</p><ul><li>Spinal qism: C1-C5 → foramen jugulare</li></ul><h3>Tekshirish</h3><ul><li>Boshni burish — SCM (qarama-qarshi tomon)</li><li>Yelkani ko'tarish — trapezius (bir xil tomon)</li></ul><div class="highlight">Zararlanish: yelka ptozi, scapula "qanotli".</div>`,
-    12:`<h3>X-juft: N. Vagus</h3><p>Eng uzun kranial nerv.</p><ul><li>Yadrolar: Nucl. ambiguus, nucl. dorsalis vagi, nucl. solitarii</li><li>Foramen jugulare orqali</li></ul><h3>Zararlanish</h3><ul><li>Disfagiya, disfoniya/afoniya</li><li>Uvula sog'lom tomonga og'adi</li><li>Bulbar falaj</li></ul>`,
-    13:`<h3>IX-juft: N. Glossopharyngeus</h3><p>Til orqa 1/3 ta'm, halqum sezgisi, parotid bez.</p><h3>Zararlanish</h3><ul><li>Ta'm sezgisi yo'qolishi (til orqa 1/3)</li><li>Glossofaringeal neyralg'iya — halqum va quloq og'rig'i</li></ul>`,
-    14:`<h3>VIII-juft: N. Vestibulocochlearis</h3><h3>Cochlear qism</h3><ul><li>Eshitish: Rinne, Weber sinovlari</li><li>Zararlanish: Gipakuziya, tinnitus</li></ul><h3>Vestibular qism</h3><ul><li>Muvozanat: Romberg, Dix-Hallpike</li><li>Zararlanish: Vertigo, nistagm</li></ul><div class="highlight">BPPV — benign paroksizmal pozitsion vertigo. Dix-Hallpike (+).</div>`,
-    15:`<h3>VII-juft: N. Facialis</h3><h3>Markaziy vs Periferik</h3><ul><li><strong>Markaziy</strong>: Faqat quyi yuz falaji (peshona saqlanadi)</li><li><strong>Periferik (Bell's palsy)</strong>: Yuz barchasi, lagoftalm, ta'm buzilishi</li></ul><h3>Davolash</h3><ul><li>Bell's palsy: Prednisolon 10 kun + ko'z tomchisi</li></ul>`,
-    16:`<h3>V-juft: N. Trigeminus</h3><ul><li><strong>V1 Oftalmik</strong> — foramen supraorbitale</li><li><strong>V2 Maxillar</strong> — foramen rotundum</li><li><strong>V3 Mandibular</strong> — foramen ovale</li></ul><h3>Trigeminal neyralg'iya</h3><p>Elektr kabi og'riq, trigger zona, V2-V3 ko'p. Davolash: Karbamazepin.</p>`,
-    17:`<h3>III-IV-VI-juft: Okulomotor guruh</h3><ul><li><strong>III</strong>: Ptoz, "down-and-out", midriaz</li><li><strong>IV</strong>: Pastga qarayotganda diplopia</li><li><strong>VI</strong>: Medial strabizm, yonlab diplopia</li></ul><div class="highlight">III-juft qorachiq tutilishi → posterior communicating artery anevrizmasi istisno qiling!</div>`,
-    18:`<h3>II-juft: N. Opticus</h3><h3>Ko'rish maydoni buzilishlari</h3><ul><li>Bir ko'z — n. opticus</li><li>Bitemporal gemianopsiya — chiasma (gipofiz)</li><li>Homonim gemianopsiya — tractus/korteks</li></ul>`,
-    19:`<h3>I-juft: N. Olfactorius</h3><p>Anosmiya — hid bilmaslik. Etmoid sinishi, meningioma.</p><h3>Limbik sistema</h3><ul><li>Hippocampus — yangi xotira</li><li>Amigdala — qo'rquv, hissiyot</li><li>Papez doirasi: Hippocampus→Fornix→Mamillare→Thalamus→Cingulate</li></ul><div class="highlight">Alzheimer: Hippocampus → anterogradli amneziya.</div>`,
-    20:`<h3>Miyacha ataksiyasi belgilari</h3><ul><li><strong>Dismetriya</strong> — nishonga to'g'ri bora olmaslik</li><li><strong>Adiadoхokineziya</strong> — tez qarama-qarshi harakatlar</li><li><strong>Intentional tremor</strong> — harakatda titrash</li><li><strong>Skandlangan nutq</strong></li><li><strong>Nistagm</strong></li></ul>`,
-    21:`<h3>Parkinson kasalligi</h3><p>Substantia nigra — dopaminergik neyronlar yo'qolishi.</p><h3>TRAP</h3><ul><li>Tremor — tinchlikda, 4-6 Hz</li><li>Rigidnost — qo'rg'oshin quvur</li><li>Akineziya/bradykineziya</li><li>Postural beqarorlik</li></ul><p>Davolash: <strong>Levodopa/Carbidopa</strong>. Lewy tanachalari: α-synuclein.</p>`,
-    22:`<h3>Katta yarimsharlari — Lob funksiyalari</h3><ul><li><strong>Frontal</strong>: Harakat, Broca nutqi, ijroiya</li><li><strong>Parietal</strong>: Sezgi, praksiya</li><li><strong>Temporal</strong>: Eshitish, Wernicke, xotira</li><li><strong>Oksipital</strong>: Ko'rish</li></ul><h3>Qon ta'minoti</h3><ul><li>ACA — oyoq</li><li>MCA — qo'l + afaziya</li><li>PCA — ko'rish</li></ul>`,
-    23:`<h3>Periferik NS</h3><ul><li>31 juft orqa miya nervi</li><li>Mononeyropatiya, Polineyropatiya</li><li>GBS — ascending falaj, arefleksiya</li></ul><h3>Avtonom NS</h3><ul><li><strong>Simpatik</strong>: T1-L2, adrenergik, fight-or-flight</li><li><strong>Parasimpatik</strong>: Kraniosakral, xolinergik</li></ul><div class="highlight">Horner sindromi: Ptoz + Miosis + Angidrozis — simpatik zanjir uzilishi.</div>`,
+    1:`<h3>Nerv to'qimasining tuzilishi</h3><p>Nerv to'qimasi <strong>neyronlar</strong> va <strong>glial hujayralar</strong>dan iborat.</p><h3>Neyronning tuzilishi</h3><ul><li><strong>Soma</strong> — yadro va organoidlar</li><li><strong>Dendritlar</strong> — impulsni somaga olib keladi</li><li><strong>Akson</strong> — impulsni somadan uzoqlashtiради</li><li><strong>Sinaps</strong> — neyronlar orasidagi ulanish</li></ul><h3>Neyron turlari</h3><ul><li><strong>Afferent</strong> — periferiyadan markazga</li><li><strong>Efferent</strong> — markazdan periferiyaga</li><li><strong>Assotsiativ</strong> — markaz ichida</li><li>Unipolar, Bipolar, Multipolar</li></ul><div class="highlight"><strong>Eslab qoling:</strong> Neyronlar mitoz yo'li bilan bo'linmaydi.</div>`,
+    2:`<h3>Glial to'qimalar</h3><p>Neyroglialar neyronlarga <strong>10 marta ko'p</strong>.</p><ul><li><strong>Astrotsitlar</strong> — qon-miya to'sig'i</li><li><strong>Oligodendrotsitlar</strong> — MNS da mielin</li><li><strong>Shvann hujayralari</strong> — PNS da mielin</li><li><strong>Mikroglia</strong> — fagotsitoz, immunitet</li><li><strong>Ependimal</strong> — qorinchalar, BOM</li></ul><div class="highlight"><strong>Klinik:</strong> MS — oligodendrotsitlar. GBS — Shvann hujayralari.</div>`,
+    3:`<h3>Orqa miya anatomiyasi</h3><p>Foramen magnumdan <strong>L1-L2</strong>gacha. 31 juft nerv.</p><ul><li>C1-C8, T1-T12, L1-L5, S1-S5</li><li><strong>C3-C5</strong> — diafragma</li><li><strong>C5-T1</strong> — qo'l (brachial plexus)</li><li><strong>L2-S2</strong> — oyoq</li><li><strong>S2-S4</strong> — siydik pufagi</li></ul>`,
+    4:`<h3>Oq modda va yo'llar</h3><ul><li><strong>Corticospinalis</strong> — harakat, medullada chatishadi</li><li><strong>Spinothalamicus lat.</strong> — og'riq/harorat, orqa miyada chatishadi</li><li><strong>Fasciculus gracilis/cuneatus</strong> — vibrasiya, medullada chatishadi</li></ul><div class="highlight"><strong>Brown-Séquard:</strong> Ipsilateral harakat + kontralateral og'riq yo'qolishi.</div>`,
+    5:`<h3>Kulrang modda</h3><ul><li>I-II — og'riq/harorat</li><li>VII — avtonom (C8-L2)</li><li>IX — motor neyronlar</li></ul><p>Old shox: Alpha, Gamma motor neyronlar, Renshaw hujayralari.</p>`,
+    6:`<h3>Sezgi — 3 neyronli zanjir</h3><p><strong>Og'riq/harorat:</strong> Ganglion → Orqa shox → old kommissura → thalamus → korteks</p><p><strong>Chuqur sezgi:</strong> Ganglion → orqa kanat → medulla → chatishadi → thalamus → korteks</p>`,
+    7:`<h3>Sezgi tekshirish va buzilishlar</h3><ul><li>Og'riq — igna, Vibrasiya — 128Hz kamerton</li><li>Anesteziya, Gipesteziya, Paresteziya, Allodinia</li><li>Periferik tip, Segmentar tip, O'tkazuvchanlik tipi</li></ul>`,
+    8:`<h3>MHN vs PHN</h3><ul><li><strong>MHN:</strong> Spastik falaj, klonus, Babinski (+), giperrefleksiya</li><li><strong>PHN:</strong> Flaccid falaj, atrofiya, fassikulatsiya, arefleksiya</li></ul>`,
+    9:`<h3>MRC Shkala</h3><ul><li>0—harakat yo'q, 1—qisqarish, 2—gravitatsiyasiz, 3—gravitatsiyaga, 4—qarshilikka qisman, 5—normal</li></ul><p>Tizza L3-L4, Achilles S1-S2, Biceps C5-C6</p>`,
+    10:`<h3>XII — Hypoglossus</h3><p>Til muskullari. Periferik: zararlangan tomonga og'adi, atrofiya, fassikulatsiya. Markaziy: kontralateral, atrofiya yo'q.</p>`,
+    11:`<h3>XI — Accessorius</h3><p>SCM va trapezius. Zararlanish: yelka ptozi, scapula qanotli, boshni burish qiyinlashadi.</p>`,
+    12:`<h3>X — Vagus</h3><p>Eng uzun kranial nerv. Disfagiya, disfoniya. Uvula sog'lom tomonga og'adi.</p>`,
+    13:`<h3>IX — Glossopharyngeus</h3><p>Til orqa 1/3 ta'm, halqum sezgisi, parotid bez. Neyralg'iya: halqum + quloq og'rig'i.</p>`,
+    14:`<h3>VIII — Vestibulocochlearis</h3><p>Cochlear: eshitish, tinnitus. Vestibular: vertigo, nistagm. BPPV — Dix-Hallpike (+).</p>`,
+    15:`<h3>VII — Facialis</h3><p>Markaziy: faqat quyi yuz. Periferik (Bell's): yuz barchasi + lagoftalm + ta'm. Davolash: Prednisolon.</p>`,
+    16:`<h3>V — Trigeminus</h3><p>V1-Oftalmik, V2-Maxillar, V3-Mandibular. Neyralg'iya: elektr kabi og'riq. Davolash: Karbamazepin.</p>`,
+    17:`<h3>III-IV-VI Okulomotor</h3><ul><li>III: Ptoz, down-and-out, midriaz</li><li>IV: Pastga diplopia</li><li>VI: Medial strabizm</li></ul><div class="highlight">III + midriaz → PCA anevrizma istisno qiling!</div>`,
+    18:`<h3>II — Optik</h3><ul><li>Bir ko'z — n.opticus</li><li>Bitemporal — chiasma (gipofiz)</li><li>Homonim — tractus/korteks</li></ul>`,
+    19:`<h3>I — Olfaktor va Limbik</h3><p>Anosmiya. Hippocampus — yangi xotira, Amigdala — hissiyot. Papez doirasi.</p>`,
+    20:`<h3>Miyacha ataksiyasi</h3><p>Dismetriya, adiadoхokineziya, intentional tremor, skandlangan nutq, nistagm.</p>`,
+    21:`<h3>Parkinson</h3><p>Substantia nigra. TRAP: Tremor+Rigidnost+Akineziya+Postural beqarorlik. Levodopa/Carbidopa.</p>`,
+    22:`<h3>Katta yarimsharlari</h3><p>Frontal: harakat+Broca. Parietal: sezgi. Temporal: eshitish+Wernicke. Oksipital: ko'rish. MCA: qo'l+afaziya. ACA: oyoq.</p>`,
+    23:`<h3>Periferik va Avtonom NS</h3><p>Simpatik: T1-L2, adrenergik. Parasimpatik: kraniosakral, xolinergik. Horner: Ptoz+Miosis+Angidrozis.</p>`,
   },
   anki:{
-    1:[{q:"Neyronning asosiy tuzilmalarini sanang",a:"Soma, Dendritlar, Akson, Sinaps"},{q:"Afferent neyron nima?",a:"Sezgi impulslarini periferiyadan markazga olib keladi"},{q:"Efferent neyron nima?",a:"Buyruq impulslarini markazdan muskulga olib boradi"},{q:"Unipolar neyron misoli?",a:"Orqa miya ganglioni (pseudounipolar)"},{q:"Neyronlar bo'lina oladimi?",a:"Yo'q, mitoz bo'linmaydi. Faqat aksonal regeneratsiya"},{q:"Multipolar neyron misoli?",a:"Motor neyronlar, Purkinje hujayralari"},{q:"Dendrit funksiyasi?",a:"Impulsni somaga olib keladi (afferent)"},{q:"Sinaps nima?",a:"Ikkita neyron orasidagi ulanish, neyrotransmitterlar orqali signal"}],
-    2:[{q:"MNS da mielin hosil qiluvchi hujayra?",a:"Oligodendrotsitlar"},{q:"PNS da mielin hosil qiluvchi hujayra?",a:"Shvann hujayralari"},{q:"Mikroglianing funksiyasi?",a:"MNS immunologik himoyasi — fagotsitoz"},{q:"Astrotsitlar nima qiladi?",a:"Qon-miya to'sig'i, K+ ionlarini tartibga solish"},{q:"Ependimal hujayralar qayerda?",a:"Miya qorinchalarini qoplaydi, BOM hosil qiladi"},{q:"Multiple skleroz qaysi hujayra?",a:"Oligodendrotsitlar — MNS demielinizatsiyasi"},{q:"Ranvier bo'g'imlari nima?",a:"Mielin qobig'idagi uzilish — saltatory o'tkazuvchanlik"},{q:"Neyroglialar neyronlarga nisbatan?",a:"10 marta ko'p"}],
-    3:[{q:"Orqa miya qayerdan qayergacha?",a:"Foramen magnumdan L1-L2 vertebragacha"},{q:"Orqa miyadan nechta juft nerv?",a:"31 juft: 8C+12T+5L+5S+1Co"},{q:"C3-C5 qaysi strukturani innervatsiya qiladi?",a:"Diafragma (n. phrenicus)"},{q:"Brachial plexus qaysi segmentlar?",a:"C5-T1"},{q:"S2-S4 nima innervatsiya qiladi?",a:"Siydik pufagi va to'g'ri ichak"}],
-    4:[{q:"Spinothalamicus lateralis nima o'tkazadi?",a:"Og'riq va harorat sezgisi"},{q:"Fasciculus gracilis nima o'tkazadi?",a:"Vibrasiya, propriotseptsiya, diskriminatsiya"},{q:"Corticospinalis qayerda chatishadi?",a:"Medullada (piramidal chatishtirish)"},{q:"Brown-Séquard sindromi nima?",a:"Orqa miya yarmining zararlanishi — ipsilateral harakat + kontralateral og'riq yo'qolishi"},{q:"Spinothalamicus qayerda chatishadi?",a:"Orqa miyada, old kommissura orqali"}],
-    5:[{q:"Rexed I-II plastinka nima uchun?",a:"Og'riq va harorat (substantia gelatinosa)"},{q:"Old shoxda qaysi neyronlar bor?",a:"Alpha, Gamma motor neyronlar, Renshaw hujayralari"},{q:"Yon shoxda nima joylashgan?",a:"Simpatik avtonom neyronlar (C8-L2)"}],
-    6:[{q:"Sezgi yo'li necha neyrondan iborat?",a:"3 neyron: Ganglion → Yadro → Thalamus → Korteks"},{q:"Og'riq va harorat qaysi yo'l?",a:"Tractus spinothalamicus lateralis"},{q:"Lemniscal yo'l qayerda chatishadi?",a:"Medullada (nucl. gracilis/cuneatus dan keyin)"},{q:"Chuqur sezgi qaysi yo'l?",a:"Fasciculus gracilis/cuneatus (orqa kanat)"}],
-    7:[{q:"Vibrasiyani tekshirish?",a:"128 Hz kamerton"},{q:"Anesteziya nima?",a:"Sezgining to'liq yo'qolishi"},{q:"Allodinia nima?",a:"Og'riqsiz ta'sirdan og'riq paydo bo'lishi"},{q:"Paresteziya nima?",a:"O'z-o'zidan nojo'ya sezgi (qimirlash, achishish)"}],
-    8:[{q:"MHN zararlanishida reflekslar?",a:"Kuchayadi (giperrefleksiya), klonus"},{q:"PHN zararlanishida tonus?",a:"Pasayadi — flaccid falaj"},{q:"Babinski nima anglatadi?",a:"MHN zararlanishi"},{q:"PHN da atrofiya bormi?",a:"Ha, muskul atrofiyasi va fassikulatsiya"}],
-    9:[{q:"MRC 0 ball?",a:"Harakat yo'q"},{q:"MRC 3 ball?",a:"Gravitatsiyaga qarshi harakat bor, qarshilikka yo'q"},{q:"Tizza refleksi yoyi?",a:"L3-L4"},{q:"Achilles refleksi yoyi?",a:"S1-S2"},{q:"Hemiplegia nima?",a:"Bir tomonlama qo'l va oyoq falaji"}],
-    10:[{q:"XII-juft nima innervatsiya qiladi?",a:"Til muskullari"},{q:"Periferik XII-juft da til qaysi tomonga?",a:"Zararlangan tomonga og'adi"},{q:"XII-juft qaysi kanal?",a:"Canalis hypoglossi"}],
-    11:[{q:"XI-juft qaysi muskullar?",a:"M. sternocleidomastoideus va m. trapezius"},{q:"XI-juft da boshni burish tekshirish?",a:"SCM — qarama-qarshi tomonga qarshilik"},{q:"XI-juft zararlanishida ko'rinish?",a:"Yelka ptozi, scapula qanotli"}],
-    12:[{q:"Vagus qaysi organlarni innervatsiya qiladi?",a:"Halqum, qizilo'ngach, yurak, o'pka, ichaklarning yuqori qismi"},{q:"Uvula zararlanishida qaysi tomonga?",a:"Sog'lom tomonga (zararlangan tomon qarama-qarshisi)"},{q:"Bulbar falaj nima?",a:"IX, X, XI, XII nervlar ikki tomonlama zararlanishi"}],
-    13:[{q:"IX-juft til qaysi qismini innervatsiya qiladi?",a:"Til orqa 1/3 (ta'm sezgisi)"},{q:"Gag refleksi afferent qismi?",a:"IX-juft (glossopharyngeal)"},{q:"Glossofaringeal neyralg'iya?",a:"Halqum va quloq atrofida elektr kabi og'riq"}],
-    14:[{q:"VIII-juft ikki qismi?",a:"Cochlear (eshitish) va Vestibular (muvozanat)"},{q:"BPPV nima?",a:"Benign Paroksizmal Pozitsion Vertigo — otolitlar o'rin almashishi"},{q:"Rinne sinovi nima tekshiradi?",a:"Havo va suyak o'tkazuvchanligini"}],
-    15:[{q:"Bell's palsy da lagoftalm nima?",a:"Ko'zni to'liq yuma olmaslik — periferik VII zararlanishi"},{q:"VII-juft markaziy vs periferik farq?",a:"Markaziy: faqat quyi yuz; Periferik: yuz barchasi"},{q:"Bell's palsy davolash?",a:"Prednisolon 10 kun + ko'z tomchisi (lagoftalm uchun)"}],
-    16:[{q:"V-juft 3 ta shox?",a:"V1-Oftalmik, V2-Maxillar, V3-Mandibular"},{q:"Trigeminal neyralg'iya davolash?",a:"Karbamazepin (birinchi qator)"},{q:"Korneal refleks afferent va efferent?",a:"Afferent: V1; Efferent: VII-juft"}],
-    17:[{q:"Down-and-out ko'z — qaysi nerv?",a:"III-juft (oculomotorius) to'liq zararlanishi"},{q:"Ptoz qaysi nerv?",a:"III-juft — levator palpebrae superioris"},{q:"Medial strabizm qaysi nerv?",a:"VI-juft (abducens) — m. rectus lateralis falaji"},{q:"IV-juft zararlanishi?",a:"Pastga qarayotganda diplopia (zinapoyadan tushishda)"}],
-    18:[{q:"Bitemporalʼ gemianopsiya sababi?",a:"Chiasma opticum zararlanishi (gipofiz adenomasi)"},{q:"Homonim gemianopsiya nima?",a:"Bir xil tomonlama ko'rish maydoni yo'qolishi"},{q:"PCA zararlanishi ko'rish buzilishi?",a:"Kontralateral homonim gemianopsiya"}],
-    19:[{q:"Anosmiya nima?",a:"Hid bilmaslik — I-juft zararlanishi"},{q:"Hippocampus funksiyasi?",a:"Yangi xotirani yozib olish (declarative memory)"},{q:"Papez doirasi?",a:"Hippocampus → Fornix → Mamillare → Thalamus → Cingulate"}],
-    20:[{q:"Miyacha ataksiyasi belgilari?",a:"Dismetriya, adiadoхokineziya, intentional tremor, skandlangan nutq, nistagm"},{q:"Intentional tremor nima?",a:"Harakatni bajarish paytida paydo bo'ladigan titrash"},{q:"Miyacha vermiси funksiyasi?",a:"Tana muvozanati va yurish koordinatsiyasi"}],
-    21:[{q:"Parkinson — qaysi tuzilma zararlanadi?",a:"Substantia nigra — dopaminergik neyronlar"},{q:"TRAP nima?",a:"Tremor+Rigidnost+Akineziya+Postural beqarorlik"},{q:"Parkinson tremori xarakteri?",a:"Tinchlikda, 4-6 Hz, pill-rolling"},{q:"Lewy tanachalari nima?",a:"α-synuclein to'planishi"},{q:"Parkinson davolash?",a:"Levodopa/Carbidopa"}],
-    22:[{q:"Broca vs Wernicke afaziyasi?",a:"Broca: nutq chiqarish buzilishi; Wernicke: tushunish buzilishi"},{q:"MCA zararlanishi?",a:"Kontralateral hemiplegia (qo'l>oyoq) + afaziya"},{q:"ACA zararlanishi?",a:"Kontralateral oyoq falaji (medial korteks)"}],
-    23:[{q:"Simpatik NS qaysi segmentlar?",a:"T1-L2 (torakolumbar)"},{q:"Horner sindromi?",a:"Ptoz + Miosis + Angidrozis — simpatik zanjir uzilishi"},{q:"GBS nima?",a:"PNS demielinizatsiyasi — ascending falaj, arefleksiya"},{q:"Diabet polineyropatiyasi?",a:"Distal simmetrik, paypoqsimon buzilish"}],
+    1:[{q:"Neyronning asosiy tuzilmalari?",a:"Soma, Dendritlar, Akson, Sinaps"},{q:"Afferent neyron?",a:"Periferiyadan markazga sezgi impulsi"},{q:"Efferent neyron?",a:"Markazdan muskulga buyruq impulsi"},{q:"Neyronlar bo'lina oladimi?",a:"Yo'q, faqat aksonal regeneratsiya"},{q:"Multipolar neyron misoli?",a:"Motor neyronlar, Purkinje hujayralari"},{q:"Sinaps nima?",a:"Neyronlar orasidagi ulanish joyi"}],
+    2:[{q:"MNS da mielin hosil qiluvchi?",a:"Oligodendrotsitlar"},{q:"PNS da mielin hosil qiluvchi?",a:"Shvann hujayralari"},{q:"Mikroglia funksiyasi?",a:"MNS immunologik himoyasi — fagotsitoz"},{q:"Multiple skleroz qaysi hujayra?",a:"Oligodendrotsitlar — MNS demielinizatsiyasi"},{q:"Neyroglialar neyronlarga nisbatan?",a:"10 marta ko'p"}],
+    3:[{q:"Orqa miya qayerdan qayergacha?",a:"Foramen magnumdan L1-L2gacha"},{q:"C3-C5 qaysi strukturani innervatsiya qiladi?",a:"Diafragma (n.phrenicus)"},{q:"S2-S4 nima innervatsiya qiladi?",a:"Siydik pufagi va to'g'ri ichak"}],
+    4:[{q:"Spinothalamicus lateralis nima o'tkazadi?",a:"Og'riq va harorat"},{q:"Corticospinalis qayerda chatishadi?",a:"Medullada"},{q:"Brown-Séquard sindromi?",a:"Ipsilateral harakat + kontralateral og'riq yo'qolishi"}],
+    5:[{q:"Rexed I-II plastinka?",a:"Og'riq va harorat (substantia gelatinosa)"},{q:"Old shoxda qaysi neyronlar?",a:"Alpha, Gamma motor neyronlar, Renshaw"}],
+    6:[{q:"Sezgi yo'li necha neyron?",a:"3 neyron: Ganglion→Yadro→Thalamus→Korteks"},{q:"Lemniscal yo'l qayerda chatishadi?",a:"Medullada"}],
+    7:[{q:"Vibrasiyani tekshirish?",a:"128 Hz kamerton"},{q:"Allodinia nima?",a:"Og'riqsiz ta'sirdan og'riq"}],
+    8:[{q:"MHN zararlanishida reflekslar?",a:"Kuchayadi, klonus, Babinski (+)"},{q:"PHN da atrofiya bormi?",a:"Ha, muskul atrofiyasi va fassikulatsiya"}],
+    9:[{q:"MRC 0 ball?",a:"Harakat yo'q"},{q:"Tizza refleksi yoyi?",a:"L3-L4"},{q:"Achilles refleksi yoyi?",a:"S1-S2"}],
+    10:[{q:"XII-juft nima innervatsiya qiladi?",a:"Til muskullari"},{q:"Til qaysi tomonga og'adi?",a:"Zararlangan tomonga"}],
+    11:[{q:"XI-juft qaysi muskullar?",a:"SCM va trapezius"}],
+    12:[{q:"Uvula zararlanishida qaysi tomonga?",a:"Sog'lom tomonga"},{q:"Bulbar falaj nima?",a:"IX,X,XI,XII ikki tomonlama zararlanishi"}],
+    13:[{q:"IX-juft til qaysi qismini?",a:"Orqa 1/3 (ta'm sezgisi)"}],
+    14:[{q:"BPPV nima?",a:"Benign Paroksizmal Pozitsion Vertigo — otolitlar o'rin almashishi"}],
+    15:[{q:"Bell's palsy — markaziy yoki periferik?",a:"Periferik — yuz barchasi zararlangan"},{q:"Bell's palsy davolash?",a:"Prednisolon 10 kun + ko'z tomchisi"}],
+    16:[{q:"Trigeminal neyralg'iya davolash?",a:"Karbamazepin"},{q:"V-juft 3 shox?",a:"V1-Oftalmik, V2-Maxillar, V3-Mandibular"}],
+    17:[{q:"Down-and-out ko'z — qaysi nerv?",a:"III-juft to'liq zararlanishi"},{q:"Medial strabizm — qaysi nerv?",a:"VI-juft (abducens)"}],
+    18:[{q:"Bitemporal gemianopsiya sababi?",a:"Chiasma opticum — gipofiz adenomasi"}],
+    19:[{q:"Hippocampus funksiyasi?",a:"Yangi xotirani yozib olish"},{q:"Anosmiya nima?",a:"Hid bilmaslik — I-juft zararlanishi"}],
+    20:[{q:"Intentional tremor nima?",a:"Harakatda paydo bo'ladigan titrash — miyacha"},{q:"Adiadoхokineziya nima?",a:"Tez qarama-qarshi harakatlarni bajara olmaslik"}],
+    21:[{q:"Parkinson — qaysi tuzilma?",a:"Substantia nigra dopaminergik neyronlar"},{q:"TRAP nima?",a:"Tremor+Rigidnost+Akineziya+Postural beqarorlik"},{q:"Parkinson davolash?",a:"Levodopa/Carbidopa"}],
+    22:[{q:"Broca vs Wernicke?",a:"Broca: nutq chiqarish; Wernicke: tushunish"},{q:"MCA zararlanishi?",a:"Kontralateral hemiplegia qo'l>oyoq + afaziya"}],
+    23:[{q:"Horner sindromi?",a:"Ptoz + Miosis + Angidrozis"},{q:"GBS nima?",a:"PNS demielinizatsiyasi — ascending falaj"}],
   },
   keys:{
-    1:[{t:"ALS",d:"q",s:"55 yoshli erkak qo'l atrofiyasi, fassikulatsiya, giperrefleksiya, Babinski (+) va tilda fassikulatsiya.",q:"MHN va PHN ikkalasi zararlangan kasallik?",a:"ALS (Amyotrofik lateral skleroz) — MHN+PHN bir vaqtda. Bulbar belgilar XII-juft PHN."},{t:"Orqa miya jarohati",d:"o",s:"Th6 darajasida jarohat. Oyoqlarda falaj, og'riq/harorat yo'q, vibrasiya/propriotseptsiya bor.",q:"Qaysi sindrom?",a:"Anterior cord syndrome — old qism zararlanishi. Corticospinalis+spinothalamicus zararlangan, orqa kanat saqlanib qolgan."}],
-    2:[{t:"Multiple Skleroz",d:"q",s:"28 yoshli ayol. 2 yilda qayta-qayta ko'rish buzilishi, oyoqlarda kuchsizlik. MRI: oq modda o'choqlari.",q:"Qaysi glial hujayra zararlangan?",a:"Oligodendrotsitlar — MNS demielinizatsiyasi. Vaqt va makonda disseminatsiya. Davolash: immunomodulyatorlar."},{t:"GBS",d:"o",s:"ORVI dan 2 hafta keyin oyoqdan boshlab ko'tariluvchi falaj, nafas qiyinligi.",q:"Qaysi kasallik va glial hujayra?",a:"Giyyen-Barre — Shvann hujayralari. Ascending, arefleksiya, CSF: oqsil ko'p/leykosit kam. Nafas monitoringi."}],
-    3:[{t:"L4 Disk gryjasi",d:"o",s:"42 yoshli bel og'rig'i, o'ng oyoqqa tarqalish, o'ng tizza refleksi pasaygan, Lasègue (+).",q:"Qaysi ildiz?",a:"L4 ildizi — L3-L4 disk gryjasi. L4 dermatomi — son va tizza medial tomoni."}],
-    4:[{t:"Brown-Séquard",d:"q",s:"O'ng tomonga pichoq yarasi. O'ng oyoq: kuchsizlik, vibrasiya yo'q. Chap oyoq: og'riq/harorat yo'q.",q:"Nega simptomlar ikki tomonlama?",a:"Ipsilateral: harakat (corticospinalis) + vibrasiya (orqa kanat) yo'qolishi. Kontralateral: og'riq/harorat (spinothalamicus oldin chatishgan)."}],
-    5:[{t:"Siringomieliya",d:"q",s:"Qo'llarda og'riq/harorat sezgisi yo'q, teginish va vibrasiya saqlanib qolgan. MRI: gidromieliya.",q:"Nega dissossiatsiya?",a:"Markaziy kanal kengayishi old kommissurani bosadi → spinothalamicus tolalari zararlandi, orqa kanat saqlanadi. 'Cape' taqsilanishi."}],
-    6:[{t:"Talamik og'riq",d:"o",s:"60 yoshli insultdan 3 oy keyin kontralateral yonuvchi og'riq, giperesteziya, allodinia.",q:"Bu qanday sindrom?",a:"Dejerine-Roussy sindromi — VPL thalamus zararlanishi. Davolash: Amitriptilin, Gabapentin."}],
-    7:[{t:"Karpal tunel",d:"os",s:"45 yoshli ayol. O'ng 1-2-3 barmoqda kechasi uvishish. Phalen (+).",q:"Qaysi nerv siqilgan?",a:"N. medianus — karpal kanal. Thenar atrofiya (kech). Davolash: splint, kortikosteroid, jarrohlik."}],
-    8:[{t:"MCA Insult",d:"q",s:"58 yoshli. Chap gemiplegia (qo'l>oyoq), Broca afaziyasi, Babinski (+). CT: o'ng MCA gipodens.",q:"Nega qo'l>oyoq va afaziya?",a:"O'ng MCA zararlanishi. MCA lateral korteks (qo'l, yuz) ta'minlaydi; ACA medial (oyoq). O'ng dominant → Broca afaziyasi."}],
-    9:[{t:"Erb falaji",d:"os",s:"Yangi tug'ilgan. O'ng qo'l vertikal osilib turadi, medial rotatsiyada.",q:"Qaysi nerv?",a:"C5-C6 brachial pleksus — Erb-Duchenne falaji. Tug'ruq paytida tortishish. Aksariyat spontan tiklanadi."}],
-    10:[{t:"Bulbar falaj",d:"q",s:"70 yoshli. Disfagiya, afoniya, tilda fassikulatsiya va atrofiya, gag refleksi yo'q.",q:"Bulbar yoki psevdobulbar?",a:"Bulbar — PHN zararlanishi. Fassikulatsiya va atrofiya PHN ni tasdiqlaydi. Psevdobulbar da: MHN, atrofiya yo'q, patologik kulgi."}],
-    11:[{t:"XI-juft iatrogen",d:"os",s:"Limfadenektomiyadan keyin yelkani ko'tara olmayapti, boshni chapga bura olmayapti.",q:"Qaysi nerv?",a:"N. accessorius (XI-juft) iatrogen zararlanishi. Trapezius → yelka; SCM → boshni qarama-qarshi tomonga burish."}],
-    12:[{t:"Chap Vagus",d:"o",s:"O'pka o'smasidan keyin chap vocal cord paralichi, uvula o'ngga og'ib turibdi.",q:"Nega chap?",a:"Chap n. laryngeus recurrens aortani aylanadi — mediastinal o'smalar bosadi. Uvula o'ngga = chap vagus zararlanishi."}],
-    13:[{t:"IX neyralg'iya",d:"o",s:"Ovqat yutganda bir tomonlama halqum og'rig'i, quloqqa tarqaladi.",q:"Trigger va qaysi nerv?",a:"Glossofaringeal neyralg'iya — IX-juft. Trigger: chaynash, yutish. Quloqqa tarqalishi: X-juft aurikulyar shoxasi. Davolash: Karbamazepin."}],
-    14:[{t:"Akustik neyroma",d:"q",s:"Bir tomonlama eshitish pasayishi, tinnitus, bosh aylanishi. MRI: ichki eshitish kanalida o'sma.",q:"Qaysi nerv va qo'shimcha zararlanish?",a:"Vestibular schwannoma — VIII-juft vestibular qism. Kengaysa VII-juft → yuz falaji, V-juft → sezgi yo'qolishi. NF2 bilan bog'liq."}],
-    15:[{t:"Bell's palsy",d:"os",s:"30 yoshli. Tongda o'ng yuz falaji: peshona ham zararlangan, lagoftalm, ta'm yo'q.",q:"Markaziy yoki periferik? Davolash?",a:"Periferik — peshona ham zararlangan (markaziy bo'lsa peshona saqlanadi). Davolash: Prednisolon + ko'z tomchisi."}],
-    16:[{t:"Trigeminal neyralg'iya",d:"o",s:"68 yoshli. Nonushta paytida chap yuzda elektr kabi 1-2 soniyalik og'riq.",q:"Qaysi shox va trigger?",a:"V2 (maxillar) yoki V3 (mandibular). Trigger: chaynash. Sababi: tomir kompressiyasi (SCA). Davolash: Karbamazepin."}],
-    17:[{t:"III-juft falaj",d:"q",s:"52 yoshli. O'ng ptoz, diplopia, ko'z pastga-tashqariga qarayapti, midriaz.",q:"Birinchi o'ylash kerak bo'lgan etiologiya?",a:"Posterior communicating artery anevrizmasi — parasimpatik tolalar tashqarida, kompressiyada birinchi zararlandi → midriaz. Shoshilinch neyrovizualizatsiya! Diabet da qorachiq odatda saqlanadi."}],
-    18:[{t:"Gipofiz adenomasi",d:"o",s:"35 yoshli ayol. Galaktoreya, amenoreya, bitemporal ko'rish maydoni yo'qolishi.",q:"Ko'rish buzilishi sababi?",a:"Chiasma opticum siqilishi. Nasal tolalar chatishadi — temporal maydon yo'qoladi. Prolaktinoma → bromokriptin."}],
-    19:[{t:"Alzheimer",d:"q",s:"72 yoshli. 3 yillik progressiv xotira yo'qolishi, orientatsiya buzilishi.",q:"Qaysi struktura birinchi?",a:"Hippocampus → anterogradli amneziya. Beta-amyloid va tau neyrofibrilllar. MRI: mediyal temporal atrofiya."}],
-    20:[{t:"Medulloblastoma",d:"o",s:"8 yoshli. Tongda bosh og'rig'i, qayt qilish, truncal ataksiya, nistagm, papilledema.",q:"Sabab?",a:"IV-qorincha blokadasi → gidrosefaliк. Medulloblastoma (bolalarda eng ko'p). Shoshilinch neyrojarrohlik."}],
-    21:[{t:"Parkinson",d:"o",s:"65 yoshli. 2 yillik qo'l titramasi, bradykineziya, mikrografiya, festinating gait.",q:"TRAP va birinchi davolash?",a:"Ha — Tremor+Rigidnost+Akineziya+Postural beqarorlik. Davolash: Levodopa/Carbidopa. Yoshroq (<60): DA agonist."}],
-    22:[{t:"MCA insult batafsil",d:"q",s:"58 yoshli. Chap qo'l-oyoq kuchsizligi (qo'l>oyoq), Broca afaziyasi.",q:"Nega qo'l>oyoq?",a:"MCA lateral korteks (qo'l, yuz) ta'minlaydi — somatotopik. ACA medial (oyoq). Shuning uchun MCA insultda qo'l ustunlik."}],
-    23:[{t:"Diabet neyropatiyasi",d:"o",s:"55 yoshli diabet. Oyoq panjalarida uvishish, kechasi og'riq, achilles refleksi yo'q.",q:"Turi va patofizologiya?",a:"Distal simmetrik sensorimotor polineyropatiya. Sorbitol to'planishi, oksidativ stress. Davolash: glikemiya nazorati + Gabapentin/Pregabalin."}],
+    1:[{t:"ALS",d:"q",s:"55 yoshli erkak. Qo'l atrofiyasi, fassikulatsiya, giperrefleksiya, Babinski (+), tilda fassikulatsiya.",q:"MHN va PHN ikkalasi zararlangan kasallik?",a:"ALS — MHN+PHN bir vaqtda. Bulbar belgilar XII-juft PHN."},{t:"Orqa miya jarohati",d:"o",s:"Th6 da jarohat. Oyoqlarda falaj, og'riq/harorat yo'q, vibrasiya bor.",q:"Qaysi sindrom?",a:"Anterior cord syndrome — corticospinalis+spinothalamicus zararlangan, orqa kanat saqlanib qolgan."}],
+    2:[{t:"Multiple Skleroz",d:"q",s:"28 yoshli ayol. Qayta-qayta ko'rish buzilishi, oyoqlarda kuchsizlik. MRI: oq modda o'choqlari.",q:"Qaysi hujayra zararlangan?",a:"Oligodendrotsitlar — MNS demielinizatsiyasi. Vaqt va makonda disseminatsiya."},{t:"GBS",d:"o",s:"ORVI dan 2 hafta keyin ko'tariluvchi falaj.",q:"Qaysi hujayra?",a:"Shvann hujayralari. Ascending, arefleksiya, oqsil ko'p/leykosit kam."}],
+    3:[{t:"L4 Disk gryjasi",d:"o",s:"Bel og'rig'i, o'ng oyoqqa tarqalish, tizza refleksi pasaygan.",q:"Qaysi ildiz?",a:"L4 ildizi — L3-L4 disk gryjasi."}],
+    4:[{t:"Brown-Séquard",d:"q",s:"O'ng orqa miyaga pichoq. O'ng oyoq: kuchsizlik+vibrasiya yo'q. Chap oyoq: og'riq/harorat yo'q.",q:"Nega ikki tomonlama?",a:"Ipsilateral: corticospinalis+orqa kanat. Kontralateral: spinothalamicus (chatishgan)."}],
+    5:[{t:"Siringomieliya",d:"q",s:"Qo'llarda og'riq/harorat yo'q, teginish bor. MRI: gidromieliya.",q:"Nega dissossiatsiya?",a:"Markaziy kanal spinothalamicus ni bosadi. Orqa kanat saqlanadi. 'Cape' taqsilanishi."}],
+    6:[{t:"Talamik og'riq",d:"o",s:"Insultdan keyin kontralateral yonuvchi og'riq, allodinia.",q:"Qanday sindrom?",a:"Dejerine-Roussy — VPL thalamus. Davolash: Amitriptilin, Gabapentin."}],
+    7:[{t:"Karpal tunel",d:"os",s:"1-2-3 barmoqda kechasi uvishish. Phalen (+).",q:"Qaysi nerv?",a:"N. medianus siqilishi. Davolash: splint, kortikosteroid."}],
+    8:[{t:"MCA Insult",d:"q",s:"Chap gemiplegia (qo'l>oyoq), Broca afaziyasi.",q:"Nega qo'l>oyoq?",a:"MCA lateral korteks ta'minlaydi (qo'l>oyoq). Somatotopik tashkil."}],
+    9:[{t:"Erb falaji",d:"os",s:"Yangi tug'ilgan. O'ng qo'l osilib turadi.",q:"Qaysi nerv?",a:"C5-C6 brachial pleksus — Erb-Duchenne."}],
+    10:[{t:"Bulbar falaj",d:"q",s:"Disfagiya, afoniya, tilda fassikulatsiya+atrofiya.",q:"Bulbar yoki psevdobulbar?",a:"Bulbar (PHN). Fassikulatsiya+atrofiya PHN ni tasdiqlaydi."}],
+    11:[{t:"XI-juft iatrogen",d:"os",s:"Limfadenektomiyadan keyin yelkani ko'tara olmayapti.",q:"Qaysi nerv?",a:"N. accessorius iatrogen zararlanishi."}],
+    12:[{t:"Chap Vagus",d:"o",s:"O'pka o'smasidan keyin chap vocal cord paralichi.",q:"Nega chap?",a:"Chap n. laryngeus recurrens aortani aylanadi — mediastinal o'smalar bosadi."}],
+    13:[{t:"IX neyralg'iya",d:"o",s:"Ovqat yutganda bir tomonlama halqum og'rig'i, quloqqa tarqaladi.",q:"Sabab?",a:"Glossofaringeal neyralg'iya. Davolash: Karbamazepin."}],
+    14:[{t:"Akustik neyroma",d:"q",s:"Bir tomonlama eshitish pasayishi, tinnitus. MRI: ichki eshitish kanalida o'sma.",q:"Qaysi nerv?",a:"Vestibular schwannoma — VIII-juft. NF2 bilan bog'liq bo'lishi mumkin."}],
+    15:[{t:"Bell's palsy",d:"os",s:"Tongda o'ng yuz falaji, lagoftalm, ta'm yo'q.",q:"Davolash?",a:"Prednisolon 10 kun + ko'z tomchisi. Periferik — peshona ham zararlangan."}],
+    16:[{t:"Trigeminal neyralg'iya",d:"o",s:"Chaynaganda elektr kabi 1-2 soniyalik og'riq.",q:"Davolash?",a:"Karbamazepin. Sababi: tomir kompressiyasi (SCA)."}],
+    17:[{t:"III-juft falaj",d:"q",s:"Ptoz, diplopia, ko'z pastga-tashqariga, midriaz.",q:"Birinchi etiologiya?",a:"Posterior communicating artery anevrizmasi. Shoshilinch neyrovizualizatsiya!"}],
+    18:[{t:"Gipofiz adenomasi",d:"o",s:"Galaktoreya, amenoreya, bitemporal gemianopsiya.",q:"Ko'rish buzilishi sababi?",a:"Chiasma opticum siqilishi. Prolaktinoma → bromokriptin."}],
+    19:[{t:"Alzheimer",d:"q",s:"72 yoshli. Progressiv xotira yo'qolishi.",q:"Qaysi struktura birinchi?",a:"Hippocampus → anterogradli amneziya. Beta-amyloid va tau."}],
+    20:[{t:"Medulloblastoma",d:"o",s:"8 yoshli. Truncal ataksiya, nistagm, papilledema.",q:"Sabab?",a:"IV-qorincha blokadasi → gidrosefaliк. Medulloblastoma."}],
+    21:[{t:"Parkinson",d:"o",s:"Tinchlikda titrash, bradykineziya, mikrografiya.",q:"Davolash?",a:"Levodopa/Carbidopa. TRAP: Tremor+Rigidnost+Akineziya+Postural beqarorlik."}],
+    22:[{t:"MCA insult",d:"q",s:"Chap hemiplegia qo'l>oyoq, Broca afaziyasi.",q:"Nega qo'l>oyoq?",a:"MCA lateral korteks — somatotopik tashkil. ACA medial (oyoq)."}],
+    23:[{t:"Diabet neyropatiyasi",d:"o",s:"Oyoq panjalarida uvishish, achilles refleksi yo'q.",q:"Turi?",a:"Distal simmetrik sensorimotor polineyropatiya. Davolash: Gabapentin/Pregabalin."}],
   }
 };
 
 populateSelects();
-updateBadge();
-renderStreakBar();
-
+pomoRender();
 checkSession();
 </script>
 </body>
